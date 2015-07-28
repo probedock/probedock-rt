@@ -3,15 +3,17 @@
 require(require('path').join(__dirname, '..', 'src', 'server', 'main.js'));
 
 var
+	_ = require('underscore'),
 	open = require('open'),
 	userhome = require('userhome'),
 	yaml = require('yamljs');
 
+var port = 1337;
+var host = '127.0.0.1';
+var openBrowser = true;
+
 try {
   var config = yaml.load(userhome('.probedock/probedock-rt.yml'));
-
-	var port = 1337;
-  var host = '127.0.0.1';
 
   if (config) {
 		if (config.port) {
@@ -21,6 +23,10 @@ try {
   	if (config.host) {
   		host = config.host;
   	}
+
+  	if (!_.isUndefined(config.openBrowser)) {
+  		openBrowser = config.openBrowser;
+  	}
 	}
 }
 catch (err) {
@@ -28,4 +34,6 @@ catch (err) {
   console.log(err);
 }
 
-open('http://' + host + ':' + port);
+if (openBrowser) {
+	open('http://' + host + ':' + port);
+}

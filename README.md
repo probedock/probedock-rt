@@ -13,12 +13,14 @@ Create the configuration file in `probedock-rt.yml` in `~/.probedock` with this 
 ```yml
 host: 127.0.0.1
 port: 1337
+openBrowser: true
 ```
 
-| Name         | Description         |
-| ------------ | ------------------- |
-| host         | The host is used by clients to connect to Probe Dock RT agent |
-| port         | The port is used by clients to connect to Probe Dock RT agent and by the web server of the agente to listen on it |
+| Name         | Default   | Description         |
+| ------------ | --------- | ------------------- |
+| host         | 127.0.0.1 | The host is used by clients to connect to Probe Dock RT agent. |
+| port         | 1337      | The port is used by clients to connect to Probe Dock RT agent and by the web server of the agente to listen on it. |
+| openBrowser  | true      | Automatically open Probe Dock RT in the default browser. |
 
 ## Usage
 
