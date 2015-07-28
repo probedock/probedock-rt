@@ -15,7 +15,6 @@ host: 127.0.0.1
 port: 1337
 ```
 
-| ------------ | ------------------- |
 | Name         | Description         |
 | ------------ | ------------------- |
 | host         | The host is used by clients to connect to Probe Dock RT agent |
