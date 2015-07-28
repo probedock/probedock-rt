@@ -1,0 +1,97 @@
+!!!
+
+%html
+  %head
+    %title= 'Mini ROX Viewer'
+
+    %meta{http-equiv: 'Content-Type', content: 'text/html; charset=utf-8'}
+
+    -#%link{href: '/css/font-awesome-ie7.min.css', media: 'all', rel: 'stylesheet', type: 'text/css'}
+    %link{href: '/css/bootstrap.min.css', media: 'all', rel: 'stylesheet', type: 'text/css'}
+    %link{href: '/css/bootstrap-responsive.min.css', media: 'all', rel: 'stylesheet', type: 'text/css'}
+    %link{href: '/css/font-awesome.min.css', media: 'all', rel: 'stylesheet', type: 'text/css'}
+    %link{href: '/css/style.css', media: 'all', rel: 'stylesheet', type: 'text/css'}
+
+    %script{src: '/socket.io/socket.io.js', type: 'text/javascript'}
+    %script{src: '/js/json2.js', type: 'text/javascript'}
+    %script{src: '/js/jquery.min.js', type: 'text/javascript'}
+    %script{src: '/js/underscore.min.js', type: 'text/javascript'}
+    %script{src: '/js/underscore.string.min.js', type: 'text/javascript'}
+    %script{src: '/js/keymaster.min.js', type: 'text/javascript'}
+    %script{src: '/js/moment.min.js', type: 'text/javascript'}
+    %script{src: '/js/bootstrap.min.js', type: 'text/javascript'}
+    %script{src: '/js/backbone.min.js', type: 'text/javascript'}
+    %script{src: '/js/backbone.marionette.min.js', type: 'text/javascript'}
+    %script{src: '/js/backbone.shortcuts.min.js', type: 'text/javascript'}
+    %script{src: '/js/backbone.dg.min.js', type: 'text/javascript'}
+    %script{src: '/js/client.js', type: 'text/javascript'}
+
+  %body
+    .container-fluid.summary-banner
+      .row-fluid
+        .span9
+          .summary
+          .main
+          .details
+
+        .span3
+          .tools
+            .toolbar.text-right.box
+              .toolbar-container
+                %form.form-inline.toolbar-form
+                  .btn-toolbar.btn-group.toolbar-status{data-toggle: 'buttons-checkbox'}
+                    %button.btn.btn-success.active{type: 'button', title: 'Click to hide passed results'}
+                      = '&nbsp;'
+                      %i.icon-thumbs-up
+                      = '&nbsp;'
+                    %button.btn.btn-danger.active{type: 'button', title: 'Click to hide failed results'}
+                      = '&nbsp;'
+                      %i.icon-thumbs-down
+                      = '&nbsp;'
+                    %button.btn.btn-warning.active{type: 'button', title: 'Click to hide inactive results'}
+                      = '&nbsp;'
+                      %i.icon-warning-sign
+                      = '&nbsp;'
+                  .btn-toolbar.btn-group.toolbar-view{data-toggle: 'buttons-radio'}
+                    %button.btn.active{type: 'button', title: 'Click to show squares', data-mode: 'squares'}
+                      = '&nbsp;'
+                      %i.icon-th
+                      = '&nbsp;'
+                    %button.btn{type: 'button', title: 'Click to show tables', data-mode: 'tables'}
+                      = '&nbsp;'
+                      %i.icon-table
+                      = '&nbsp;'
+                  .btn-toolbar.btn-group.toolbar-reset
+                    %button.btn.btn-warning{type: 'button', title: 'Click to reset the views'}
+                      = '&nbsp;'
+                      %i.icon-trash
+                      = '&nbsp;'
+                  .btn-toolbar.btn-group.text-filter
+                    %input.input-large{type: 'text', placeholder: 'text filtering'}
+                  .btn-toolbar.btn-group.toolbar-clear
+                    %button.btn.btn-danger{type: 'button', title: 'Click to clear all the data'}
+                      = '&nbsp;'
+                      %i.icon-refresh
+                      = '&nbsp;'
+
+            .filters.box
+              .filters-container
+                %from.form-inline.filters-form.text-center
+                  .input-append
+                    %input.input-large#filterField{type: 'text', placeholder: 'Execution filters'}
+                    %button.btn.filter-add{title: 'Click to add an execution filter'}
+                      %i.icon-plus
+                      = '&nbsp;'
+                    %button.btn.filter-clearall#filterClearAll{title: 'Click to clear all the current execution filters'}
+                      %i.icon-trash
+                      = '&nbsp;'
+                .filter-elements.filter-elements-hide
+
+          .notifications-outer-container.box
+            .notifications-inner-container
+              %button.notifications-ack{type: 'button', title: 'Click to clear all the notifications'}
+                %i.icon-legal
+              .notifications-title.text-center
+                %h3= 'Notifications'
+                .no-notification= 'No notification received'
+              .notifications.hide

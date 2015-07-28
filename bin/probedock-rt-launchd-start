@@ -1,0 +1,50 @@
+#!/usr/bin/env node
+var cli = require('cli-color'),
+    exec = require('child_process').exec,
+    fs = require('fs'),
+    path = require('path');
+
+var success = cli.green,
+    warning = cli.yellow,
+    error = cli.red;
+
+if (process.platform != 'darwin') {
+  console.log(error('Only darwin platform is supported, got ' + process.platform));
+  process.exit(2)
+}
+
+var plistName = 'io.probedock.pdrt.plist',
+    probeDockRtDir = path.resolve(path.join(__dirname, '..')),
+    homeDir = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE,
+    launchAgentsDir = path.join(homeDir, 'Library', 'LaunchAgents'),
+    plistFile = path.join(launchAgentsDir, plistName),
+    binFile = path.join(__dirname, '..', 'bin', 'probedock-rt');
+
+try {
+  fs.statSync(launchAgentsDir);
+} catch (e) {
+  console.log(error(launchAgentsDir + ' does not exist'));
+  process.exit(1);
+}
+
+var plist = fs.readFileSync(path.join(__dirname, '..', 'res', plistName), { encoding : 'UTF-8' }),
+    contents = plist.replace(/PROBE_DOCK_RT_DIR/, probeDockRtDir).replace(/PROBE_DOCK_RT_PATH/, process.env.PATH);
+
+exec('launchctl stop io.probedock.pdrt; launchctl unload ' + plistFile + ' &>/dev/null', function(err, stdout, stderr) {
+
+  fs.writeFileSync(plistFile, contents);
+
+  exec('launchctl load ' + plistFile, function(err, stdout, stderr) {
+
+    if (err) {
+      console.log(error('Could not start probe dock rt: ' + err));
+      if (stderr) {
+        console.log(warning(stderr));
+      }
+      process.exit(1);
+    }
+
+    console.log(warning('Installed and loaded ' + plistFile));
+    console.log(success('Started probe dock rt'));
+  });
+});

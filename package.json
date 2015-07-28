@@ -1,0 +1,49 @@
+{
+  "name": "probedock-rt",
+  "description": "Real time test tracking tool.",
+  "version": "0.0.1",
+  "author": {
+    "name": "Laurent Prevost",
+    "email": "laurent.prevost@probedock.io"
+  },
+  "contributors": [
+    {
+      "name": "Simon Oulevay",
+      "email": "simon.oulevay@probedock.io"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/probedock/probedock-rt"
+  },
+  "keywords": [
+    "probedock",
+    "real time"
+  ],
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "bin": "./bin/probedock-rt",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node bin/probedock-rt"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-rigger": "0.4.0",
+    "grunt-contrib-clean": "0.4.0",
+    "grunt-contrib-compass": "0.1.3",
+    "grunt-haml": "0.3.1",
+    "grunt-contrib-uglify": "0.2.0",
+    "grunt-contrib-copy": "0.4.0",
+    "grunt-bump": "0.0.2",
+    "grunt-contrib-jshint": "0.3.0"
+  },
+  "dependencies": {
+    "cli-color": "0.2.2",
+    "node-static": "0.7.6",
+    "socket.io": "~1.3.4",
+    "userhome": "^1.0.0",
+    "yamljs": "^0.2.3"
+  }
+}
