@@ -52,7 +52,6 @@ io.sockets.on('connection', function (socket) {
 	});
 
 	socket.on('run:test:result', function(data) {
-    console.log(data);
 		socket.broadcast.emit('run:test:result', data);
 	});
 
