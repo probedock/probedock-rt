@@ -60,7 +60,7 @@
 		template: function(data) {
 			var colorClass;
 
-			if (data.flags == 1) {
+			if (!data.active) {
 				colorClass = "badge-warning";
 			}
 			else {
@@ -75,7 +75,7 @@
 			return '<td class="center"><code class="key">' + data.id + '</code></td>' +
 				'<td><span class="name">' + data.name + '</span></td>' +
 				'<td class="right">' + _.formatDuration(data.duration) + '</td>' +
-				'<td class="center"><span class="badge ' + colorClass + '">' + data.passed + '</span></td>';
+				'<td class="center"><span class="badge ' + colorClass + '">' + (data.passed ? 'passed' : 'failed') + '</span></td>';
 		},
 
 		/**

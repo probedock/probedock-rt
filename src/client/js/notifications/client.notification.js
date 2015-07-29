@@ -49,13 +49,13 @@
 			var notification = new ProbeDockRT.TestNotificationView({model: new Backbone.Model(data)});
 
 			// Listen to the show details event to show a test in the details view
-			ProbeDockRT.app.listenTo(notification, 'show:details', function(testKey) {
-				this.trigger('add:test:details', testKey);
+			ProbeDockRT.app.listenTo(notification, 'show:details', function(testId) {
+				this.trigger('add:test:details', testId);
 			}, ProbeDockRT.app);
 
-			// Listen to the filter to add filter by key in the filters view
-			ProbeDockRT.app.listenTo(notification, 'filter', function(filter) {
-				this.trigger('filter:add', filter);
+			// Listen to the filter to add filter
+			ProbeDockRT.app.listenTo(notification, 'filter', function(type, text) {
+				this.trigger('filter:add', type, text);
 			}, ProbeDockRT.app);
 
 			// Show the view

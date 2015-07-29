@@ -87,7 +87,7 @@ module.exports = function(grunt) {
       },
       all: {
         files: [
-          'src/client/js/*.js',
+          'src/client/js/**/*.js',
           'src/client/scss/*.sccs',
           'src/client/haml/*.haml'
         ],

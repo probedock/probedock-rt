@@ -262,7 +262,7 @@
 			// Get the stats from the test
 			var testStat = {
 				passed: test.get('passed'),
-				inactive: test.get('flags') == 1,
+				inactive: !test.get('active'),
 				duration: test.get('duration')
 			};
 
@@ -768,10 +768,10 @@
 
 			if (keep) {
 				// Check if the test is inactive and inactive must be kept
-				keep = this.externalState.state.filters.status.inactive && model.get('flags') == 1;
+				keep = this.externalState.state.filters.status.inactive && !model.get('active');
 
 				// Check if the test is passed (or not) and passed (or not) must be kept
-				if (!keep && model.get('flags') != 1 &&
+				if (!keep && model.get('active') &&
 					((this.externalState.state.filters.status.passed && model.get('passed')) || (this.externalState.state.filters.status.failed && !model.get('passed')))) {
 					keep = true;
 				}

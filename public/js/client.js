@@ -444,7 +444,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 			// Get the stats from the test
 			var testStat = {
 				passed: test.get('passed'),
-				inactive: test.get('flags') == 1,
+				inactive: !test.get('active'),
 				duration: test.get('duration')
 			};
 
@@ -950,10 +950,10 @@ var ProbeDockRT = window.ProbeDockRT = {
 
 			if (keep) {
 				// Check if the test is inactive and inactive must be kept
-				keep = this.externalState.state.filters.status.inactive && model.get('flags') == 1;
+				keep = this.externalState.state.filters.status.inactive && !model.get('active');
 
 				// Check if the test is passed (or not) and passed (or not) must be kept
-				if (!keep && model.get('flags') != 1 &&
+				if (!keep && model.get('active') &&
 					((this.externalState.state.filters.status.passed && model.get('passed')) || (this.externalState.state.filters.status.failed && !model.get('passed')))) {
 					keep = true;
 				}
@@ -2344,7 +2344,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 		},
 
 		ui: {
-			key: 'code'
+      key: 'code'
 		},
 
 		/**
@@ -2354,10 +2354,19 @@ var ProbeDockRT = window.ProbeDockRT = {
 		 * @returns {string} The template ready to render
 		 */
 		title: function(data) {
-			var title = '<span class="test-notification {testNotificationClass}"><i class="{icon}"></i>&nbsp;Test <code>' + data.k + '</code> {statusText}</span>';
+      var label;
+
+      if (data.k) {
+        label = '<code class="code-key" data-fp="' + data.f + '">' + data.k + '</code>'
+      }
+      else {
+        label = '<code class="code-fingerprint" data-fp="' + data.f + '">' + data.f + '</code>'
+      }
+
+			var title = '<span class="test-notification {testNotificationClass}"><i class="{icon}"></i>&nbsp;Test ' + label + ' {statusText}</span>';
 
 			title = title.replace('{statusText}', data.p ? 'passed' : 'failed').replace('{icon}', data.p ? 'icon-thumbs-up' : 'icon-thumbs-down');
-			if (data.f == 1) {
+			if (!data.e) {
 				title = title.replace('{testNotificationClass}', 'test-notification-inactive');
 			}
 			else {
@@ -2387,10 +2396,10 @@ var ProbeDockRT = window.ProbeDockRT = {
 
 			// Differentiate the action to add a key filter or to show the test details
 			if (event.altKey) {
-				this.trigger('filter', 'key:' + this.ui.key.text());
+				this.trigger('filter', 'fp', this.ui.key.data('fp'));
 			}
 			else {
-				this.trigger('show:details', this.ui.key.text());
+        this.trigger('show:details', this.ui.key.data('fp'));
 			}
 		}
 	});
@@ -2439,13 +2448,13 @@ var ProbeDockRT = window.ProbeDockRT = {
 			var notification = new ProbeDockRT.TestNotificationView({model: new Backbone.Model(data)});
 
 			// Listen to the show details event to show a test in the details view
-			ProbeDockRT.app.listenTo(notification, 'show:details', function(testKey) {
-				this.trigger('add:test:details', testKey);
+			ProbeDockRT.app.listenTo(notification, 'show:details', function(testId) {
+				this.trigger('add:test:details', testId);
 			}, ProbeDockRT.app);
 
-			// Listen to the filter to add filter by key in the filters view
-			ProbeDockRT.app.listenTo(notification, 'filter', function(filter) {
-				this.trigger('filter:add', filter);
+			// Listen to the filter to add filter
+			ProbeDockRT.app.listenTo(notification, 'filter', function(type, text) {
+				this.trigger('filter:add', type, text);
 			}, ProbeDockRT.app);
 
 			// Show the view
@@ -2689,7 +2698,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 			var colorClass;
 
 			// Check if the test result is inactive
-			if (this.model.get('flags') == 1) {
+			if (!this.model.get('active')) {
 				colorClass = "btn-warning square-test-inactive";
 			}
 			else {
@@ -2704,7 +2713,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 
 			// Configure the title of the square
 			this.$el.popover({
-				title: '<span class="square-popover-title">' + this.model.get('id') + '</code>',
+				title: '<span class="square-popover-title">' + this.model.get('id').substr(0, 10) + '...</code>',
 				content: '<span class="square-popover-content">' + this.model.get('name') + '</span>',
 				html:true,
 				container: this.$el
@@ -2891,7 +2900,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 		template: function(data) {
 			var colorClass;
 
-			if (data.flags == 1) {
+			if (!data.active) {
 				colorClass = "badge-warning";
 			}
 			else {
@@ -2906,7 +2915,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 			return '<td class="center"><code class="key">' + data.id + '</code></td>' +
 				'<td><span class="name">' + data.name + '</span></td>' +
 				'<td class="right">' + _.formatDuration(data.duration) + '</td>' +
-				'<td class="center"><span class="badge ' + colorClass + '">' + data.passed + '</span></td>';
+				'<td class="center"><span class="badge ' + colorClass + '">' + (data.passed ? 'passed' : 'failed') + '</span></td>';
 		},
 
 		/**
@@ -3092,7 +3101,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 			var statusClass, statusText, titleClass;
 
 			// Compute the class and text for the test status
-			if (data.flags == 1) {
+			if (!data.active) {
 				statusClass = 'label-warning';
 				statusText = 'Inactive (' + (data.passed ? 'Passed' : 'Failed') + ')';
 				titleClass = 'test-details-inactive';

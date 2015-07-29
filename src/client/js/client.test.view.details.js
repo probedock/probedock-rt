@@ -35,7 +35,7 @@
 			var statusClass, statusText, titleClass;
 
 			// Compute the class and text for the test status
-			if (data.flags == 1) {
+			if (!data.active) {
 				statusClass = 'label-warning';
 				statusText = 'Inactive (' + (data.passed ? 'Passed' : 'Failed') + ')';
 				titleClass = 'test-details-inactive';

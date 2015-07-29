@@ -75,7 +75,7 @@
 			var colorClass;
 
 			// Check if the test result is inactive
-			if (this.model.get('flags') == 1) {
+			if (!this.model.get('active')) {
 				colorClass = "btn-warning square-test-inactive";
 			}
 			else {
@@ -90,7 +90,7 @@
 
 			// Configure the title of the square
 			this.$el.popover({
-				title: '<span class="square-popover-title">' + this.model.get('id') + '</code>',
+				title: '<span class="square-popover-title">' + this.model.get('id').substr(0, 10) + '...</code>',
 				content: '<span class="square-popover-content">' + this.model.get('name') + '</span>',
 				html:true,
 				container: this.$el

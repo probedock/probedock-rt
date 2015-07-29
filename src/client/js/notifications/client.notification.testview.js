@@ -12,7 +12,7 @@
 		},
 
 		ui: {
-			key: 'code'
+      key: 'code'
 		},
 
 		/**
@@ -22,10 +22,19 @@
 		 * @returns {string} The template ready to render
 		 */
 		title: function(data) {
-			var title = '<span class="test-notification {testNotificationClass}"><i class="{icon}"></i>&nbsp;Test <code>' + data.k + '</code> {statusText}</span>';
+      var label;
+
+      if (data.k) {
+        label = '<code class="code-key" data-fp="' + data.f + '">' + data.k + '</code>'
+      }
+      else {
+        label = '<code class="code-fingerprint" data-fp="' + data.f + '">' + data.f + '</code>'
+      }
+
+			var title = '<span class="test-notification {testNotificationClass}"><i class="{icon}"></i>&nbsp;Test ' + label + ' {statusText}</span>';
 
 			title = title.replace('{statusText}', data.p ? 'passed' : 'failed').replace('{icon}', data.p ? 'icon-thumbs-up' : 'icon-thumbs-down');
-			if (data.f == 1) {
+			if (!data.e) {
 				title = title.replace('{testNotificationClass}', 'test-notification-inactive');
 			}
 			else {
@@ -55,10 +64,10 @@
 
 			// Differentiate the action to add a key filter or to show the test details
 			if (event.altKey) {
-				this.trigger('filter', 'key:' + this.ui.key.text());
+				this.trigger('filter', 'fp', this.ui.key.data('fp'));
 			}
 			else {
-				this.trigger('show:details', this.ui.key.text());
+        this.trigger('show:details', this.ui.key.data('fp'));
 			}
 		}
 	});
