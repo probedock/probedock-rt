@@ -109,24 +109,24 @@
 
 			// Retrieve the attributes from
 			var attributes = {
-				name: testResult.n, passed: testResult.p, duration: testResult.d, flags: testResult.f, message: testResult.m,
-				flatten_tags: testResult.g.join(','), flatten_tickets: testResult.t.join(','),
+				key: testResult.k, name: testResult.n, passed: testResult.p, duration: testResult.d, active: testResult.e,
+        message: testResult.m, flatten_tags: testResult.g.join(','), flatten_tickets: testResult.t.join(','),
 				tags: testResult.g, tickets: testResult.t, data: testResult.a, project: projectName, version: projectVersion,
-				category: category
+				category: category, fingerprint: testResult.f
 			};
 
 			// Add or update the test result
-			this.addOrUpdateTest(testResult.k, coordinates, attributes);
+			this.addOrUpdateTest(coordinates, attributes);
 		},
 
-		addOrUpdateTest: function(key, coordinates, testAttributes) {
+		addOrUpdateTest: function(coordinates, testAttributes) {
 			var testModel;
-			if (_.isUndefined(this.projects.get(coordinates).get('tests').get(key))) {
-				testModel = new ProbeDockRT.TestModel(_.extend(testAttributes, {id: key}));
+			if (_.isUndefined(this.projects.get(coordinates).get('tests').get(testAttributes.fingerprint))) {
+				testModel = new ProbeDockRT.TestModel(_.extend(testAttributes, {id: testAttributes.fingerprint}));
 				this.projects.get(coordinates).get('tests').add(testModel);
 			}
 			else {
-				testModel = this.projects.get(coordinates).get('tests').get(key);
+				testModel = this.projects.get(coordinates).get('tests').get(testAttributes.fingerprint);
 
 				testModel.set(testAttributes);
 
@@ -139,7 +139,7 @@
 			this.summary.addOrUpdate(testModel);
 		},
 
-		addProjectFromTestResult: function(coordinates, name, version, category, testKey) {
+		addProjectFromTestResult: function(coordinates, name, version, category) {
 			// Create the project collection if it does not exist
 			if (_.isUndefined(this.projects.get(coordinates))) {
 				// Create the test collection

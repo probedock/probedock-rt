@@ -430,35 +430,41 @@ td.right {
 }
 
 /* line 381, ../../src/client/scss/style.scss */
+.code-fingerprint {
+  font-weight: bold;
+  color: #000088;
+}
+
+/* line 386, ../../src/client/scss/style.scss */
 .notifications-outer-container {
   margin-top: 20px;
 }
 
-/* line 385, ../../src/client/scss/style.scss */
+/* line 390, ../../src/client/scss/style.scss */
 .notifications-inner-container {
   max-height: 450px;
   overflow-y: auto;
 }
 
-/* line 390, ../../src/client/scss/style.scss */
+/* line 395, ../../src/client/scss/style.scss */
 .notifications-title {
   margin-bottom: 10px;
 }
-/* line 393, ../../src/client/scss/style.scss */
+/* line 398, ../../src/client/scss/style.scss */
 .notifications-title h3 {
   margin: 0px;
 }
-/* line 397, ../../src/client/scss/style.scss */
+/* line 402, ../../src/client/scss/style.scss */
 .notifications-title div {
   padding: 10px 0px;
 }
 
-/* line 402, ../../src/client/scss/style.scss */
+/* line 407, ../../src/client/scss/style.scss */
 .notifications {
   padding: 10px;
 }
 
-/* line 406, ../../src/client/scss/style.scss */
+/* line 411, ../../src/client/scss/style.scss */
 .notifications-ack {
   color: gray !important;
   position: relative;
@@ -469,31 +475,31 @@ td.right {
   right: 10px;
   top: 15px;
 }
-/* line 416, ../../src/client/scss/style.scss */
+/* line 421, ../../src/client/scss/style.scss */
 .notifications-ack:hover {
   font-weight: bold !important;
   color: darkgray !important;
 }
 
-/* line 422, ../../src/client/scss/style.scss */
+/* line 427, ../../src/client/scss/style.scss */
 .notification {
   padding: 8px;
 }
-/* line 425, ../../src/client/scss/style.scss */
+/* line 430, ../../src/client/scss/style.scss */
 .notification:last-child {
   margin-bottom: 0px;
 }
-/* line 429, ../../src/client/scss/style.scss */
+/* line 434, ../../src/client/scss/style.scss */
 .notification p {
   margin-bottom: 0px;
 }
-/* line 433, ../../src/client/scss/style.scss */
+/* line 438, ../../src/client/scss/style.scss */
 .notification hr {
   border-color: gray;
   margin: 5px -2px;
 }
 
-/* line 439, ../../src/client/scss/style.scss */
+/* line 444, ../../src/client/scss/style.scss */
 .notification-close {
   color: gray !important;
   margin-right: -5px;
@@ -503,23 +509,23 @@ td.right {
   border: none;
   float: right;
 }
-/* line 448, ../../src/client/scss/style.scss */
+/* line 453, ../../src/client/scss/style.scss */
 .notification-close:hover {
   font-weight: bold !important;
   color: darkgray !important;
 }
 
-/* line 454, ../../src/client/scss/style.scss */
+/* line 459, ../../src/client/scss/style.scss */
 .test-notification-passed {
   color: #51A351;
 }
 
-/* line 458, ../../src/client/scss/style.scss */
+/* line 463, ../../src/client/scss/style.scss */
 .test-notification-failed {
   color: #BD362F;
 }
 
-/* line 462, ../../src/client/scss/style.scss */
+/* line 467, ../../src/client/scss/style.scss */
 .test-notification-inactive {
   color: #F89406;
 }

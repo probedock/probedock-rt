@@ -12,6 +12,7 @@
 
 		events: {
 			'click .code-key': '_addKeyFilter',
+      'click .code-fingerprint': '_addFingerprintFilter',
 			'click .title-name': '_addNameFilter',
 			'click .badge-tag': '_addTagFilter',
 			'click .badge-ticket': '_addTicketFilter',
@@ -72,7 +73,8 @@
 				'<div class="well test-details box">' +
 					'<div class="row-fluid title-first-line ' + titleClass + '">' +
 						'<div class="test-details-right-container pull-right">' +
-							'<code class="pull-left code-key">' + data.id + '</code>' +
+							(data.key ? '<code class="pull-left code-key">key: ' + data.key + '</code>' : '') +
+              '<code class="pull-left code-fingerprint">fp:&nbsp;' + data.fingerprint + '</code>' +
 							'<span class="label label-info pull-left no-op">' + _.formatDuration(data.duration) + '</span>' +
 							'<span class="label pull-left no-op ' + statusClass + '">' + statusText + '</span>' +
 						'</div>' +
@@ -116,8 +118,17 @@
 		 * @param {Event} event Event to get the key filter
 		 */
 		_addKeyFilter: function(event) {
-			this._handleAddFilterEvent(event, 'key');
+			this._handleAddFilterEvent(event, $(event.target).text().substr(5), 'key');
 		},
+
+    /**
+     * Add a filter by fingerprint
+     *
+     * @param {Event} event Event to get the fingerprint filter
+     */
+    _addFingerprintFilter: function(event) {
+      this._handleAddFilterEvent(event, $(event.target).text().substr(4), 'fp');
+    },
 
 		/**
 		 * Add a filter by name
@@ -125,7 +136,7 @@
 		 * @param {Event} event Event to get the name filter
 		 */
 		_addNameFilter: function(event) {
-			this._handleAddFilterEvent(event, 'name');
+			this._handleAddFilterEvent(event, $(event.target).text(), 'name');
 		},
 
 		/**
@@ -134,7 +145,7 @@
 		 * @param {Event} event Event to get the tag filter
 		 */
 		_addTagFilter: function(event) {
-			this._handleAddFilterEvent(event, 'tag');
+			this._handleAddFilterEvent(event, $(event.target).text(), 'tag');
 		},
 
 		/**
@@ -143,7 +154,7 @@
 		 * @param {Event} event Event to get the ticket filter
 		 */
 		_addTicketFilter: function(event) {
-			this._handleAddFilterEvent(event, 'ticket');
+			this._handleAddFilterEvent(event, $(event.target).text(), 'ticket');
 		},
 
 		/**
@@ -171,16 +182,17 @@
 		 *
 		 * @private
 		 * @param {Event} event Event to get the filter text
+     * @param {String} text The text to use in the filter
 		 * @param {String} type The filter type
 		 */
-		_handleAddFilterEvent: function(event, type) {
+		_handleAddFilterEvent: function(event, text, type) {
 			// Avoid closing the details
 			event.stopPropagation();
 
 			// Check if the alt key is pressed
 			if (event.altKey) {
 				// Trigger the event to add a filter
-				detailsEventAggregator.trigger('filter', type + ':' + $(event.target).text());
+				detailsEventAggregator.trigger('filter', type, text);
 			}
 		}
 	});
@@ -246,8 +258,8 @@
 		});
 
 		// Listen the shortcuts to add filters
-		detailsEventAggregator.on('filter', function(filter) {
-			this.trigger('filter:add', filter);
+		detailsEventAggregator.on('filter', function(type, text) {
+			this.trigger('filter:add', type, text);
 		}, this);
 
 		// Listen to remove a details

@@ -1318,24 +1318,24 @@ var ProbeDockRT = window.ProbeDockRT = {
 
 			// Retrieve the attributes from
 			var attributes = {
-				name: testResult.n, passed: testResult.p, duration: testResult.d, flags: testResult.f, message: testResult.m,
-				flatten_tags: testResult.g.join(','), flatten_tickets: testResult.t.join(','),
+				key: testResult.k, name: testResult.n, passed: testResult.p, duration: testResult.d, active: testResult.e,
+        message: testResult.m, flatten_tags: testResult.g.join(','), flatten_tickets: testResult.t.join(','),
 				tags: testResult.g, tickets: testResult.t, data: testResult.a, project: projectName, version: projectVersion,
-				category: category
+				category: category, fingerprint: testResult.f
 			};
 
 			// Add or update the test result
-			this.addOrUpdateTest(testResult.k, coordinates, attributes);
+			this.addOrUpdateTest(coordinates, attributes);
 		},
 
-		addOrUpdateTest: function(key, coordinates, testAttributes) {
+		addOrUpdateTest: function(coordinates, testAttributes) {
 			var testModel;
-			if (_.isUndefined(this.projects.get(coordinates).get('tests').get(key))) {
-				testModel = new ProbeDockRT.TestModel(_.extend(testAttributes, {id: key}));
+			if (_.isUndefined(this.projects.get(coordinates).get('tests').get(testAttributes.fingerprint))) {
+				testModel = new ProbeDockRT.TestModel(_.extend(testAttributes, {id: testAttributes.fingerprint}));
 				this.projects.get(coordinates).get('tests').add(testModel);
 			}
 			else {
-				testModel = this.projects.get(coordinates).get('tests').get(key);
+				testModel = this.projects.get(coordinates).get('tests').get(testAttributes.fingerprint);
 
 				testModel.set(testAttributes);
 
@@ -1348,7 +1348,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 			this.summary.addOrUpdate(testModel);
 		},
 
-		addProjectFromTestResult: function(coordinates, name, version, category, testKey) {
+		addProjectFromTestResult: function(coordinates, name, version, category) {
 			// Create the project collection if it does not exist
 			if (_.isUndefined(this.projects.get(coordinates))) {
 				// Create the test collection
@@ -1464,8 +1464,8 @@ var ProbeDockRT = window.ProbeDockRT = {
 		this.socket = io.connect(window.location.protocol + '//' + window.location.host);
 
 		// Define strings
-		var mini = 'Probe Dock RT Agent';
-		var connectionEstablished = 'Connection to ' + mini + ' established';
+		var rt = 'Probe Dock RT Agent';
+		var connectionEstablished = 'Connection to ' + rt + ' established';
 
 		// When the connection is correctly established
 		this.socket.on('connect', function() {
@@ -1473,7 +1473,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 
 			self.trigger('filters:set');
 
-			connectionEstablished = 'You have been reconnected to ' + mini;
+			connectionEstablished = 'You have been reconnected to ' + rt;
 		});
 
 		// Any error that was not captured before
@@ -1483,12 +1483,12 @@ var ProbeDockRT = window.ProbeDockRT = {
 
 		// Listen when the SocketIO server cut the connection
 		this.socket.on('disconnect', function() {
-			self.trigger('notify:message', 'You have been disconnected from the ' + mini, 'error');
+			self.trigger('notify:message', 'You have been disconnected from the ' + rt, 'error');
 		});
 
 		// Listen when SocketIO client try to reconnect to probe dock rt agent
 		this.socket.on('reconnecting', function(duration) {
-			self.trigger('notify:reconnect', 'Attempt to reconnect in {countdown} to the ' + mini + ' is in progress', duration);
+			self.trigger('notify:reconnect', 'Attempt to reconnect in {countdown} to the ' + rt + ' is in progress', duration);
 		});
 
 		// Handle the payload reception
@@ -1798,9 +1798,19 @@ var ProbeDockRT = window.ProbeDockRT = {
 				ico: 'key',
 				title: 'Key filter'
 			},
+      fp: {
+        ico: 'hand-up',
+        title: 'Fingerprint filter',
+        reduce: function(str) {
+          return str.length > 9 ? str.substr(0, 3) + '...' + str.substr(str.length - 3) : str;
+        }
+      },
 			name: {
 				ico: 'reorder',
-				title: 'Name filter'
+				title: 'Name filter',
+        reduce: function(str) {
+          return str.length > 10 ? str.substr(0, 9) + '...' : str;
+        }
 			},
 			tag: {
 				ico: 'tag',
@@ -1814,10 +1824,10 @@ var ProbeDockRT = window.ProbeDockRT = {
 				ico: 'list-alt',
 				title: 'Ticket filter'
 			},
-			unknown: {
-				ico: 'question-sign',
-				title: 'Unknown filter: {type}'
-			}
+      '*': {
+        ico: 'asterisk',
+        title: 'Generic filter'
+      }
 		},
 
 		/**
@@ -1854,60 +1864,66 @@ var ProbeDockRT = window.ProbeDockRT = {
 		 */
 		addFilterEvent: function(event) {
 			event.preventDefault();
-			this.addFilter(this.ui.filter.val());
+
+      var text = _.str.trim(this.ui.filter.val()), type = null;
+
+      _.each(this.icons, function(icon, iconKey) {
+        if (_.str.startsWith(text, iconKey + ':')) {
+          text = text.replace(iconKey + ':', '');
+          type = iconKey;
+        }
+      });
+
+			this.addFilter(type, text);
 		},
 
 		/**
 		 * Add a filter and trigger to the user interface and
 		 * notify once it is done
 		 *
-		 * @param {String} filter The filter to add
+		 * @param {String} filterType The filter to add
+     * @param {String} filterText The filter text
 		 */
-		addFilter: function(filter) {
-			// Try to find the filter type pattern
-			var iconMatch = this.iconRegex.exec(filter);
-
+		addFilter: function(filterType, filterText) {
 			// Correct the filter (remove spaces for specific filters) and trimed the filter type
-			var trimedName = null;
-			if (iconMatch) {
-				filter = _.str.trim(iconMatch[1]) + ':' + _.str.trim(iconMatch[2]);
-				trimedName = _.str.trim(iconMatch[1]);
-			}
+      filterText = _.str.trim(filterText);
+
+      // Fix filter type if required
+      if (!filterType) {
+        filterType = '*';
+      }
 
 			// Check if the filter is already present
-			if (filter !== '' && !_.contains(this.filters, filter)) {
+			if (!_.find(this.filters, function(filter) { return filter.type == filterType && filter.text == filterText; })) {
 				// Add the filter
-				this.filters.push(filter);
+				this.filters.push({ type: filterType, text: filterText });
 
 				// Working variables
-				var transformedFilter = '';
+				var iconTag = '';
 				var icon;
 
 				// Check if the pattern match a known type
-				if (trimedName && this.icons[trimedName]) {
-					icon =  this.icons[trimedName];
-					transformedFilter = filter.replace(trimedName + ':', '<i class="icon-' + icon.ico + ' filter-icon" title="' + icon.title + '"></i>');
+				if (this.icons[filterType]) {
+					icon =  this.icons[filterType];
+					iconTag = '<i class="icon-' + icon.ico + ' filter-icon" title="' + icon.title + '"></i>';
 				}
 
-				// Check if the pattern is recognized but no known type is found
-				else if (trimedName) {
-					icon =  this.icons.unknown;
-					transformedFilter = filter.replace(trimedName + ':', '<i class="icon-' + icon.ico + ' filter-icon" title="' + icon.title.replace('{type}', trimedName) + '"></i>');
-				}
-
-				// Otherwise put a generic icon for the filter
-				else {
-					transformedFilter = '<i class="icon-asterisk filter-icon" title="Generic filter"></i>' + filter;
-				}
+        var viewableFilterText;
+        if (!_.isUndefined(this.icons[filterType].reduce)) {
+          viewableFilterText = this.icons[filterType].reduce(filterText);
+        }
+        else {
+          viewableFilterText = filterText;
+        }
 
 				// Create the filter element
-				var filterElement = $('<span class="filter-element-text">' + transformedFilter + '</span><button class="filter-element-close"><i class="icon-remove-sign"></i></button>');
+				var filterElement = $('<span class="filter-element-text">' + iconTag + viewableFilterText + '</span><button class="filter-element-close"><i class="icon-remove-sign"></i></button>');
 
 				// Initialize the tooltip
 				this.initTooltip(filterElement.find('i'));
 
 				// Create the filter element for the GUI
-				var filterDiv = $('<div class="filter-element"></div>').append(filterElement).data('filter', filter);
+				var filterDiv = $('<div class="filter-element"></div>').append(filterElement).data('filter', filterText);
 
 				// Add the filter element
 				this.ui.filterElements.append(filterDiv);
@@ -1936,7 +1952,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 
 				// Remove the filter from the collection
 				this.filters = _.reject(this.filters, function(value) {
-					return value === filterText;
+					return value.text === filterText;
 				});
 
 				// Remove the tooltip
@@ -3053,6 +3069,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 
 		events: {
 			'click .code-key': '_addKeyFilter',
+      'click .code-fingerprint': '_addFingerprintFilter',
 			'click .title-name': '_addNameFilter',
 			'click .badge-tag': '_addTagFilter',
 			'click .badge-ticket': '_addTicketFilter',
@@ -3113,7 +3130,8 @@ var ProbeDockRT = window.ProbeDockRT = {
 				'<div class="well test-details box">' +
 					'<div class="row-fluid title-first-line ' + titleClass + '">' +
 						'<div class="test-details-right-container pull-right">' +
-							'<code class="pull-left code-key">' + data.id + '</code>' +
+							(data.key ? '<code class="pull-left code-key">key: ' + data.key + '</code>' : '') +
+              '<code class="pull-left code-fingerprint">fp:&nbsp;' + data.fingerprint + '</code>' +
 							'<span class="label label-info pull-left no-op">' + _.formatDuration(data.duration) + '</span>' +
 							'<span class="label pull-left no-op ' + statusClass + '">' + statusText + '</span>' +
 						'</div>' +
@@ -3157,8 +3175,17 @@ var ProbeDockRT = window.ProbeDockRT = {
 		 * @param {Event} event Event to get the key filter
 		 */
 		_addKeyFilter: function(event) {
-			this._handleAddFilterEvent(event, 'key');
+			this._handleAddFilterEvent(event, $(event.target).text().substr(5), 'key');
 		},
+
+    /**
+     * Add a filter by fingerprint
+     *
+     * @param {Event} event Event to get the fingerprint filter
+     */
+    _addFingerprintFilter: function(event) {
+      this._handleAddFilterEvent(event, $(event.target).text().substr(4), 'fp');
+    },
 
 		/**
 		 * Add a filter by name
@@ -3166,7 +3193,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 		 * @param {Event} event Event to get the name filter
 		 */
 		_addNameFilter: function(event) {
-			this._handleAddFilterEvent(event, 'name');
+			this._handleAddFilterEvent(event, $(event.target).text(), 'name');
 		},
 
 		/**
@@ -3175,7 +3202,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 		 * @param {Event} event Event to get the tag filter
 		 */
 		_addTagFilter: function(event) {
-			this._handleAddFilterEvent(event, 'tag');
+			this._handleAddFilterEvent(event, $(event.target).text(), 'tag');
 		},
 
 		/**
@@ -3184,7 +3211,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 		 * @param {Event} event Event to get the ticket filter
 		 */
 		_addTicketFilter: function(event) {
-			this._handleAddFilterEvent(event, 'ticket');
+			this._handleAddFilterEvent(event, $(event.target).text(), 'ticket');
 		},
 
 		/**
@@ -3212,16 +3239,17 @@ var ProbeDockRT = window.ProbeDockRT = {
 		 *
 		 * @private
 		 * @param {Event} event Event to get the filter text
+     * @param {String} text The text to use in the filter
 		 * @param {String} type The filter type
 		 */
-		_handleAddFilterEvent: function(event, type) {
+		_handleAddFilterEvent: function(event, text, type) {
 			// Avoid closing the details
 			event.stopPropagation();
 
 			// Check if the alt key is pressed
 			if (event.altKey) {
 				// Trigger the event to add a filter
-				detailsEventAggregator.trigger('filter', type + ':' + $(event.target).text());
+				detailsEventAggregator.trigger('filter', type, text);
 			}
 		}
 	});
@@ -3287,8 +3315,8 @@ var ProbeDockRT = window.ProbeDockRT = {
 		});
 
 		// Listen the shortcuts to add filters
-		detailsEventAggregator.on('filter', function(filter) {
-			this.trigger('filter:add', filter);
+		detailsEventAggregator.on('filter', function(type, text) {
+			this.trigger('filter:add', type, text);
 		}, this);
 
 		// Listen to remove a details

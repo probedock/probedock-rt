@@ -9,8 +9,8 @@
 		this.socket = io.connect(window.location.protocol + '//' + window.location.host);
 
 		// Define strings
-		var mini = 'Probe Dock RT Agent';
-		var connectionEstablished = 'Connection to ' + mini + ' established';
+		var rt = 'Probe Dock RT Agent';
+		var connectionEstablished = 'Connection to ' + rt + ' established';
 
 		// When the connection is correctly established
 		this.socket.on('connect', function() {
@@ -18,7 +18,7 @@
 
 			self.trigger('filters:set');
 
-			connectionEstablished = 'You have been reconnected to ' + mini;
+			connectionEstablished = 'You have been reconnected to ' + rt;
 		});
 
 		// Any error that was not captured before
@@ -28,12 +28,12 @@
 
 		// Listen when the SocketIO server cut the connection
 		this.socket.on('disconnect', function() {
-			self.trigger('notify:message', 'You have been disconnected from the ' + mini, 'error');
+			self.trigger('notify:message', 'You have been disconnected from the ' + rt, 'error');
 		});
 
 		// Listen when SocketIO client try to reconnect to probe dock rt agent
 		this.socket.on('reconnecting', function(duration) {
-			self.trigger('notify:reconnect', 'Attempt to reconnect in {countdown} to the ' + mini + ' is in progress', duration);
+			self.trigger('notify:reconnect', 'Attempt to reconnect in {countdown} to the ' + rt + ' is in progress', duration);
 		});
 
 		// Handle the payload reception

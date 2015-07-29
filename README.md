@@ -21,6 +21,7 @@ openBrowser: true
 | host         | 127.0.0.1 | The host is used by clients to connect to Probe Dock RT agent. |
 | port         | 1337      | The port is used by clients to connect to Probe Dock RT agent and by the web server of the agente to listen on it. |
 | openBrowser  | true      | Automatically open Probe Dock RT in the default browser. |
+| enabled      | true      | For the clients, define if the results are sent to Probe Dock RT agent or not. |
 
 ## Usage
 

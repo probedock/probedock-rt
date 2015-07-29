@@ -18,9 +18,19 @@
 				ico: 'key',
 				title: 'Key filter'
 			},
+      fp: {
+        ico: 'hand-up',
+        title: 'Fingerprint filter',
+        reduce: function(str) {
+          return str.length > 9 ? str.substr(0, 3) + '...' + str.substr(str.length - 3) : str;
+        }
+      },
 			name: {
 				ico: 'reorder',
-				title: 'Name filter'
+				title: 'Name filter',
+        reduce: function(str) {
+          return str.length > 10 ? str.substr(0, 9) + '...' : str;
+        }
 			},
 			tag: {
 				ico: 'tag',
@@ -34,10 +44,10 @@
 				ico: 'list-alt',
 				title: 'Ticket filter'
 			},
-			unknown: {
-				ico: 'question-sign',
-				title: 'Unknown filter: {type}'
-			}
+      '*': {
+        ico: 'asterisk',
+        title: 'Generic filter'
+      }
 		},
 
 		/**
@@ -74,60 +84,66 @@
 		 */
 		addFilterEvent: function(event) {
 			event.preventDefault();
-			this.addFilter(this.ui.filter.val());
+
+      var text = _.str.trim(this.ui.filter.val()), type = null;
+
+      _.each(this.icons, function(icon, iconKey) {
+        if (_.str.startsWith(text, iconKey + ':')) {
+          text = text.replace(iconKey + ':', '');
+          type = iconKey;
+        }
+      });
+
+			this.addFilter(type, text);
 		},
 
 		/**
 		 * Add a filter and trigger to the user interface and
 		 * notify once it is done
 		 *
-		 * @param {String} filter The filter to add
+		 * @param {String} filterType The filter to add
+     * @param {String} filterText The filter text
 		 */
-		addFilter: function(filter) {
-			// Try to find the filter type pattern
-			var iconMatch = this.iconRegex.exec(filter);
-
+		addFilter: function(filterType, filterText) {
 			// Correct the filter (remove spaces for specific filters) and trimed the filter type
-			var trimedName = null;
-			if (iconMatch) {
-				filter = _.str.trim(iconMatch[1]) + ':' + _.str.trim(iconMatch[2]);
-				trimedName = _.str.trim(iconMatch[1]);
-			}
+      filterText = _.str.trim(filterText);
+
+      // Fix filter type if required
+      if (!filterType) {
+        filterType = '*';
+      }
 
 			// Check if the filter is already present
-			if (filter !== '' && !_.contains(this.filters, filter)) {
+			if (!_.find(this.filters, function(filter) { return filter.type == filterType && filter.text == filterText; })) {
 				// Add the filter
-				this.filters.push(filter);
+				this.filters.push({ type: filterType, text: filterText });
 
 				// Working variables
-				var transformedFilter = '';
+				var iconTag = '';
 				var icon;
 
 				// Check if the pattern match a known type
-				if (trimedName && this.icons[trimedName]) {
-					icon =  this.icons[trimedName];
-					transformedFilter = filter.replace(trimedName + ':', '<i class="icon-' + icon.ico + ' filter-icon" title="' + icon.title + '"></i>');
+				if (this.icons[filterType]) {
+					icon =  this.icons[filterType];
+					iconTag = '<i class="icon-' + icon.ico + ' filter-icon" title="' + icon.title + '"></i>';
 				}
 
-				// Check if the pattern is recognized but no known type is found
-				else if (trimedName) {
-					icon =  this.icons.unknown;
-					transformedFilter = filter.replace(trimedName + ':', '<i class="icon-' + icon.ico + ' filter-icon" title="' + icon.title.replace('{type}', trimedName) + '"></i>');
-				}
-
-				// Otherwise put a generic icon for the filter
-				else {
-					transformedFilter = '<i class="icon-asterisk filter-icon" title="Generic filter"></i>' + filter;
-				}
+        var viewableFilterText;
+        if (!_.isUndefined(this.icons[filterType].reduce)) {
+          viewableFilterText = this.icons[filterType].reduce(filterText);
+        }
+        else {
+          viewableFilterText = filterText;
+        }
 
 				// Create the filter element
-				var filterElement = $('<span class="filter-element-text">' + transformedFilter + '</span><button class="filter-element-close"><i class="icon-remove-sign"></i></button>');
+				var filterElement = $('<span class="filter-element-text">' + iconTag + viewableFilterText + '</span><button class="filter-element-close"><i class="icon-remove-sign"></i></button>');
 
 				// Initialize the tooltip
 				this.initTooltip(filterElement.find('i'));
 
 				// Create the filter element for the GUI
-				var filterDiv = $('<div class="filter-element"></div>').append(filterElement).data('filter', filter);
+				var filterDiv = $('<div class="filter-element"></div>').append(filterElement).data('filter', filterText);
 
 				// Add the filter element
 				this.ui.filterElements.append(filterDiv);
@@ -156,7 +172,7 @@
 
 				// Remove the filter from the collection
 				this.filters = _.reject(this.filters, function(value) {
-					return value === filterText;
+					return value.text === filterText;
 				});
 
 				// Remove the tooltip
