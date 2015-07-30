@@ -33,10 +33,10 @@
 		 * @returns {string} Template ready to be rendered
 		 */
 		template: function(data) {
-			return '<th class="s center">Key<span class="sorting-wrapper"><i class="sorting icon-sort"></i></span></th>' +
-				'<th>Name<span class="sorting-wrapper"><i class="sorting icon-sort"></i></span></th>' +
-				'<th class="s center">Duration<span class="sorting-wrapper"><i class="sorting icon-sort"></i></span></th>' +
-				'<th class="s center">Status<span class="sorting-wrapper"><i class="sorting icon-sort"></i></span></th>';
+			return '<th class="s center">Key</th>' +
+				'<th>Name</th>' +
+				'<th class="s center">Duration</th>' +
+				'<th class="s center">Status</th>';
 		}
 	});
 

@@ -76,6 +76,9 @@
 			}
 		}, this);
 
+    // Be sure filters are empty on page reload
+    this.socket.emit('filters:set', { filters: [] });
+
 		// For debug purposes
 		if (DEBUG) {
 			this.socket.emit('payload:get', function(data) {

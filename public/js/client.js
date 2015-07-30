@@ -1333,13 +1333,18 @@ var ProbeDockRT = window.ProbeDockRT = {
 			if (_.isUndefined(this.projects.get(coordinates).get('tests').get(testAttributes.fingerprint))) {
 				testModel = new ProbeDockRT.TestModel(_.extend(testAttributes, {id: testAttributes.fingerprint}));
 				this.projects.get(coordinates).get('tests').add(testModel);
+
+        if (!testModel.get('passed') && testModel.get('active')) {
+          testModel.set('order', this.detailsCounter++);
+          this.addTestDetails(testModel);
+        }
 			}
 			else {
 				testModel = this.projects.get(coordinates).get('tests').get(testAttributes.fingerprint);
 
 				testModel.set(testAttributes);
 
-				if (!testModel.get('passed') && testModel.get('flag') != 1) {
+				if (!testModel.get('passed') && testModel.get('active')) {
 					testModel.set('order', this.detailsCounter++);
 					this.updateDetailResult(testModel);
 				}
@@ -1530,6 +1535,9 @@ var ProbeDockRT = window.ProbeDockRT = {
 				this.socket.emit('filters:reset');
 			}
 		}, this);
+
+    // Be sure filters are empty on page reload
+    this.socket.emit('filters:set', { filters: [] });
 
 		// For debug purposes
 		if (DEBUG) {
@@ -2873,10 +2881,10 @@ var ProbeDockRT = window.ProbeDockRT = {
 		 * @returns {string} Template ready to be rendered
 		 */
 		template: function(data) {
-			return '<th class="s center">Key<span class="sorting-wrapper"><i class="sorting icon-sort"></i></span></th>' +
-				'<th>Name<span class="sorting-wrapper"><i class="sorting icon-sort"></i></span></th>' +
-				'<th class="s center">Duration<span class="sorting-wrapper"><i class="sorting icon-sort"></i></span></th>' +
-				'<th class="s center">Status<span class="sorting-wrapper"><i class="sorting icon-sort"></i></span></th>';
+			return '<th class="s center">Key</th>' +
+				'<th>Name</th>' +
+				'<th class="s center">Duration</th>' +
+				'<th class="s center">Status</th>';
 		}
 	});
 

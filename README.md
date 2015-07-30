@@ -14,6 +14,7 @@ Create the configuration file in `probedock-rt.yml` in `~/.probedock` with this 
 host: 127.0.0.1
 port: 1337
 openBrowser: true
+enabled: true
 ```
 
 | Name         | Default   | Description         |
@@ -30,6 +31,10 @@ $> probedock-rt
 ```
 
 Open your browser and reach [http://localhost:1337](http://localhost:1337) or change the port accordingly to your configuration file.
+
+## Next steps
+
+Follow the instructions on the [Probe Dock RT Clients](github.com/probedock/probedock-rt-clients) page.
 
 ### Requirements
 

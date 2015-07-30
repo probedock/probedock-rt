@@ -124,13 +124,18 @@
 			if (_.isUndefined(this.projects.get(coordinates).get('tests').get(testAttributes.fingerprint))) {
 				testModel = new ProbeDockRT.TestModel(_.extend(testAttributes, {id: testAttributes.fingerprint}));
 				this.projects.get(coordinates).get('tests').add(testModel);
+
+        if (!testModel.get('passed') && testModel.get('active')) {
+          testModel.set('order', this.detailsCounter++);
+          this.addTestDetails(testModel);
+        }
 			}
 			else {
 				testModel = this.projects.get(coordinates).get('tests').get(testAttributes.fingerprint);
 
 				testModel.set(testAttributes);
 
-				if (!testModel.get('passed') && testModel.get('flag') != 1) {
+				if (!testModel.get('passed') && testModel.get('active')) {
 					testModel.set('order', this.detailsCounter++);
 					this.updateDetailResult(testModel);
 				}
