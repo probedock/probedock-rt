@@ -34,7 +34,7 @@ Open your browser and reach [http://localhost:1337](http://localhost:1337) or ch
 
 ## Next steps
 
-Follow the instructions on the [Probe Dock RT Clients](github.com/probedock/probedock-rt-clients) page.
+Follow the instructions on the [Probe Dock RT Clients](https://github.com/probedock/probedock-rt-clients) page.
 
 ### Requirements
 
