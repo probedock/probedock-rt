@@ -1,6 +1,8 @@
 var request = require('request');
 
 module.exports = function(grunt) {
+  //require('grunt-postcss')(grunt);
+
   var reloadPort = 35728, files;
 
   grunt.initConfig({
@@ -55,6 +57,20 @@ module.exports = function(grunt) {
       }
     },
 
+    postcss: {
+      options: {
+        map: true,
+        processors: [
+          require('autoprefixer-core')({
+            browsers: ['last 2 versions']
+          })
+        ]
+      },
+      dist: {
+        src: 'public/css/style.css'
+      }
+    },
+
     uglify: {
       options: {
         banner: '<%= meta.banner %>',
@@ -88,8 +104,8 @@ module.exports = function(grunt) {
       all: {
         files: [
           'src/client/js/**/*.js',
-          'src/client/scss/*.sccs',
-          'src/client/haml/*.haml'
+          'src/client/scss/**/*.scss',
+          'src/client/haml/**/*.haml'
         ],
         tasks: [ 'client' ]
       }
@@ -124,9 +140,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-develop');
+  grunt.loadNpmTasks('grunt-postcss');
 
   grunt.registerTask('server', "Validate the server", ['jshint:server']);
-  grunt.registerTask('client', "Clean, validate and build the client", ['clean:client', 'jshint:client', 'rig:client', 'uglify:client', 'compass:client', 'haml:client', 'copy:client']);
+  grunt.registerTask('client', "Clean, validate and build the client", ['clean:client', 'jshint:client', 'rig:client', 'uglify:client', 'compass:client', 'haml:client', 'copy:client', 'postcss:dist']);
   grunt.registerTask('all', "Run the core, test and doc tasks", ['server', 'client']);
 
   grunt.registerTask('dev', 'Dev mode', [ 'all', 'develop', 'watch' ]);

@@ -26,6 +26,8 @@ var ProbeDockRT = window.ProbeDockRT = {
 //= client.test.view.tables.js
 //= client.test.view.details.js
 
+//= client.viewmanager.js
+
 /**
  * Start the application when the page is loaded
  */

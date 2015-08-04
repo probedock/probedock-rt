@@ -19,9 +19,80 @@ a:hover {
   }
 }
 
+html {
+  height: 100%;
+}
+
 body {
   background-color: #423F3A;
   color: #CFCECB;
+  height: 100%;
+}
+
+#main-ui {
+  display: none;
+}
+
+.main-action {
+  position: absolute;
+  cursor: pointer;
+  font-size: 2.5em;
+  right: 25px;
+  top: 15px;
+}
+
+.help-close > i {
+  color: #BD362F;
+}
+
+.help-open > i {
+  color: #2F96B4;
+}
+
+.help-box-parent {
+  justify-content: flex-start;
+  flex-direction: column;
+  align-content: stretch;
+  align-items: stretch;
+  display: flex;
+  height: 100%;
+  width: 100%
+}
+
+.help-box-header, .help-box-footer {
+}
+
+.help-box-container {
+  justify-content: flex-start;
+  align-content: stretch;
+  align-items: stretch;
+  flex-direction: row;
+  display: flex;
+  flex: 1;
+}
+
+.help-box {
+  flex-direction: column;
+  margin-bottom: 10px;
+  overflow: auto;
+  padding: 10px;
+}
+
+.help-box-content {
+  padding-right: 10px;
+  height: 0;
+}
+
+.help-box-spacer {
+  margin-top: 20px;
+}
+
+.help-box-img {
+  padding: 10px 0;
+}
+
+.help-box-center {
+  text-align: center;
 }
 
 .pagination {
