@@ -2330,7 +2330,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 		contentTemplate: function(data) {
 			return '' +
 				'<p>' +
-				'<span>Project: ' + data.project.name + '</span><br />' +
+				'<span>Project: ' + data.project.apiId + '</span><br />' +
 				'<span>Version: ' + data.project.version + '</span><br />' +
 				'<span>Category: ' + data.category + '</span>' +
 				(!data.start ? '<br /><span>Duration: ' + _.formatDuration(data.duration) + '</span>' : '') +
