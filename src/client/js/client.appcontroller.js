@@ -47,7 +47,8 @@
 		 * For a refresh of the user interface at the default values
 		 */
 		refreshAll: function() {
-			this.trigger('show:results:' + this.defaultMode);
+      this.viewMode = this.defaultMode;
+			this.trigger('show:results:' + this.viewMode);
 			this.trigger('show:details');
 		},
 

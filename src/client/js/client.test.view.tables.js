@@ -209,8 +209,7 @@
 	 * Initialize the view in the ProbeDockRT application controller
 	 */
 	ProbeDockRT.app.addInitializer(function(options) {
-		// Create the view with the projects collection
-		var view = new TablesCollectionsView({collection: this.projects});
+		var self = this;
 
 		// Listen the shortcuts to add filters
 		tablesEventAggregator.on('filter', function(filter) {
@@ -220,7 +219,7 @@
 		// Listen the view mode to show the Tables
 		this.on('show:results:tables', function() {
 			// Show the view
-			this.main.show(view);
+			this.main.show(new TablesCollectionsView({collection: self.projects}));
 		}, this);
 	});
 }).call(this);

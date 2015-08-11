@@ -1256,7 +1256,8 @@ var ProbeDockRT = window.ProbeDockRT = {
 		 * For a refresh of the user interface at the default values
 		 */
 		refreshAll: function() {
-			this.trigger('show:results:' + this.defaultMode);
+      this.viewMode = this.defaultMode;
+			this.trigger('show:results:' + this.viewMode);
 			this.trigger('show:details');
 		},
 
@@ -2828,13 +2829,13 @@ var ProbeDockRT = window.ProbeDockRT = {
 	 * Initialize the view in the ProbeDockRT application controller
 	 */
 	ProbeDockRT.app.addInitializer(function(options) {
-		// Create the view with the projects collection
-		var view = new SquaresCollectionsView({collection: this.projects});
+    var self = this;
 
 		// Listen the view mode to show the Squares
 		this.on('show:results:squares', function() {
 			// Show the view
-			this.main.show(view);
+			//this.main.reset();
+			this.main.show(new SquaresCollectionsView({collection: self.projects}));
 		}, this);
 
 		// Listen to show test details
@@ -2843,7 +2844,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 		}, this);
 
 		// Initialize the view with empty collection to allow receiving new data
-		this.main.show(view);
+		this.main.show(new SquaresCollectionsView({collection: this.projects}));
 	});
 }).call(this);
 (function() {
@@ -3057,8 +3058,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 	 * Initialize the view in the ProbeDockRT application controller
 	 */
 	ProbeDockRT.app.addInitializer(function(options) {
-		// Create the view with the projects collection
-		var view = new TablesCollectionsView({collection: this.projects});
+		var self = this;
 
 		// Listen the shortcuts to add filters
 		tablesEventAggregator.on('filter', function(filter) {
@@ -3068,7 +3068,7 @@ var ProbeDockRT = window.ProbeDockRT = {
 		// Listen the view mode to show the Tables
 		this.on('show:results:tables', function() {
 			// Show the view
-			this.main.show(view);
+			this.main.show(new TablesCollectionsView({collection: self.projects}));
 		}, this);
 	});
 }).call(this);
