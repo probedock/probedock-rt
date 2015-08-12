@@ -30,3 +30,5 @@ node_modules
 
 .idea
 .sass-cache
+temp
+temp-prepa
