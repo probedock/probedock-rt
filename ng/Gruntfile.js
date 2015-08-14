@@ -45,7 +45,6 @@ module.exports = function(grunt) {
           //{ nonull: true, src: 'bower_components/angular-repeat-n/dist/angular-repeat-n.js', dest: 'vendor/assets/javascripts/angular-ng-repeat-n.js' },
 
           // stylesheets (if the stylesheet has relative URLs, use "assetsWithRelativeUrls" below)
-          { nonull: true, cwd: 'bower_components/bootstrap/dist/css', src: ['bootstrap.css', 'bootstrap-theme.css'], dest: 'vendor/assets/stylesheets', expand: true },
 
           // fonts
           { nonull: true, cwd: 'bower_components/bootstrap/dist/fonts/', src: '**', dest: 'vendor/assets/fonts/', flatten: true, expand: true }
@@ -56,18 +55,10 @@ module.exports = function(grunt) {
       // stylesheets with relative URLs (that need to be fixed to work with the asset pipeline)
       assetsWithRelativeUrls: {
         files: [
-          //{ nonull: true, src: 'bower_components/mdi/css/materialdesignicons.css', dest: 'vendor/assets/stylesheets/materialdesignicons.css' }
+          { nonull: true, cwd: 'bower_components/bootstrap/dist/css', src: ['bootstrap.css', 'bootstrap-theme.css'], dest: 'vendor/assets/stylesheets', expand: true }
         ],
         options: {
-          process: function(regexp, replacement) {
-            regexp = regexp || /url\(("|')\.\.\/fonts\//g;
-            replacement = replacement || 'url($1';
-            return function(content) {
-              return content
-                .replace(regexp, replacement)
-                .replace(/\/\*\#.*?\*\//, '');
-            };
-          }
+          process: require('./grunt/lib/cssAssetPipelinePreprocessor')()
         }
       }
     },
@@ -109,6 +100,13 @@ module.exports = function(grunt) {
       }
     },
 
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js',
+        singleRun: true
+      }
+    },
+
     jshint: {
       all: [ 'Gruntfile.js', 'client/**/*.js', 'grunt/**/*.js', 'mincer/**/*.js', 'server/**/*.js' ]
     },
@@ -135,10 +133,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-run');
   grunt.loadNpmTasks('grunt-prettify');
+  grunt.loadNpmTasks('grunt-karma');
 
   grunt.registerTask('default', [ 'jshint' ]);
   grunt.registerTask('deploy', [ 'precompile', 'run:deploy' ]);
   grunt.registerTask('dev', [ 'clean:cache', 'run:develop' ]);
+  grunt.registerTask('unit', [ 'karma:unit' ]);
   grunt.registerTask('precompile', [ 'clean:public', 'clean:cache', 'jade:precompile', 'precompileAssets', 'prettify:precompile' ]);
   grunt.registerTask('vendor', [ 'copy:assets', 'copy:assetsWithRelativeUrls' ]);
 };

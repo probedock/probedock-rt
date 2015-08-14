@@ -1,18 +1,18 @@
 // Libraries
-//= require underscore
-//= require jquery
-//= require moment
-//= require socket-io-client
+//= require javascripts/underscore
+//= require javascripts/jquery
+//= require javascripts/moment
+//= require javascripts/socket-io-client
 
 // AngularJS & Modules
-//= require angular
-//= require angular-moment
-//= require angular-socket-io
-//= require angular-translate
-//= require angular-translate-loader-static-files
-//= require angular-ui-router
-//= require ui-bootstrap
-//= require ui-bootstrap-tpls
+//= require javascripts/angular
+//= require javascripts/angular-moment
+//= require javascripts/angular-socket-io
+//= require javascripts/angular-translate
+//= require javascripts/angular-translate-loader-static-files
+//= require javascripts/angular-ui-router
+//= require javascripts/ui-bootstrap
+//= require javascripts/ui-bootstrap-tpls
 
 // Application
 //= require ./main

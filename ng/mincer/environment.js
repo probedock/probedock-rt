@@ -29,9 +29,7 @@ environment.appendPath(path.join(config.root, 'client'));
 
 // Vendored assets in "vendor/fonts", "vendor/images", etc., can be referenced with relative paths from those directories,
 // e.g. if the asset file is at "vendor/fonts/glyphicons.ttf", use "glyphicons.ttf" as the path.
-_.each([ 'fonts', 'images', 'javascripts', 'stylesheets' ], function(type) {
-  environment.appendPath(path.join(config.root, 'vendor', 'assets', type));
-});
+environment.appendPath(path.join(config.root, 'vendor', 'assets'));
 
 // Cache compiled assets.
 //

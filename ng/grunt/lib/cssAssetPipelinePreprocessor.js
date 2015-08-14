@@ -3,7 +3,7 @@
 // is removed from the beginning of URLs, and sourcemap comments
 // are removed.
 module.exports = function(regexp, replacement) {
-  regexp = regexp || /url\(("|')\.\.\/fonts\//g;
+  regexp = regexp || /url\(("|')\.\.\//g;
   replacement = replacement || 'url($1';
   return function(content) {
     return content
