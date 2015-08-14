@@ -1,0 +1,36 @@
+angular.module('probedock-rt.config', [])
+
+  .constant('env', <%- JSON.stringify(config().env) %>)
+
+  .constant('version', <%- JSON.stringify(config().app.version) %>)
+
+  .provider('config', function() {
+
+    var config = <%- JSON.stringify(config()) %>;
+
+    this.$get = function() {
+      return config;
+    };
+  })
+
+  .factory('configService', function(api, $q) {
+
+    var config;
+
+    return {
+      fetch: function() {
+        if (config) {
+          return $q.when(config);
+        } else {
+          return api({
+            url: '/config'
+          }).then(function(res) {
+            config = res.data;
+            return config;
+          });
+        }
+      }
+    };
+  })
+
+;

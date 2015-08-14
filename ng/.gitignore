@@ -26,8 +26,15 @@ build/Release
 
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git-
+bower_components
 node_modules
 
 .idea
-.sass-cache
-temp
+
+config/*
+!config/sample.yml
+
+cache
+
+public/*
+!public/favicon.ico

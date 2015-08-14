@@ -1,0 +1,15 @@
+doctype html
+html(ng-app='probedock-rt', ng-strict-di=true, lang='en')
+  head
+    meta(charset='utf-8')
+    base(href='/')
+
+    title {{ 'application.title' | translate }}
+
+    != css('app')
+    != js('app')
+
+    link(rel='shortcut icon', type='image/x-icon', href='/favicon.ico')
+  body
+    .debugGrid
+    div.main(ui-view)
