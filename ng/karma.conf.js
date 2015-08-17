@@ -1,4 +1,8 @@
-var environment = require('./mincer/environment');
+var
+  mincer = require('mincer'),
+  environment = require('./mincer/environment'),
+  path = require('path'),
+  config = require('./config');
 
 var files = [];
 
@@ -6,10 +10,19 @@ function assetFilter(file) {
   return file.match(/\.(?:js)$/);
 }
 
-environment.eachLogicalPath([ assetFilter ], function(file) {
-  files.push(environment.findAsset(file).relativePath);
-});
+var manifest = new mincer.Manifest(environment, path.join(config.root, '.tmp', 'test', 'assets'));
+var compiledAssets = manifest.compile([
+  path.join(config.root, 'client', 'vendor.js'),
+  path.join(config.root, 'client', 'modules', 'config', 'index.js.ejs')
+]);
 
+files.push(path.join(config.root, '.tmp', 'test', 'assets', compiledAssets.assets['vendor.js']));
+files.push('bower_components/angular-mocks/angular-mocks.js');
+
+files.push(path.join(config.root, 'client', 'main.js'));
+files.push(path.join(config.root, 'client', 'routes.js'));
+files.push(path.join(config.root, '.tmp', 'test', 'assets', compiledAssets.assets['modules/config/index.js']));
+files.push(path.join(config.root, 'client', 'modules') + '/**/*.js');
 files.push('client/modules/**/*.spec.js');
 
 module.exports = function(config) {

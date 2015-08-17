@@ -17,7 +17,8 @@ module.exports = function(grunt) {
 
     clean: {
       cache: [ 'cache/**/*' ],
-      public: [ 'public/**/*', '!public/favicon.ico' ]
+      public: [ 'public/**/*', '!public/favicon.ico' ],
+      test: [ '.tmp/test' ]
     },
 
     copy: {
@@ -138,7 +139,7 @@ module.exports = function(grunt) {
   grunt.registerTask('default', [ 'jshint' ]);
   grunt.registerTask('deploy', [ 'precompile', 'run:deploy' ]);
   grunt.registerTask('dev', [ 'clean:cache', 'run:develop' ]);
-  grunt.registerTask('unit', [ 'karma:unit' ]);
+  grunt.registerTask('unit', [ 'clean:test', 'karma:unit' ]);
   grunt.registerTask('precompile', [ 'clean:public', 'clean:cache', 'jade:precompile', 'precompileAssets', 'prettify:precompile' ]);
   grunt.registerTask('vendor', [ 'copy:assets', 'copy:assetsWithRelativeUrls' ]);
 };

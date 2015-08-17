@@ -3,7 +3,7 @@
 describe('Controller: MainCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('probedockRt'));
+  beforeEach(module('probedock-rt'));
 
   var MainCtrl,
       scope,

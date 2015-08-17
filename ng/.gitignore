@@ -35,6 +35,7 @@ config/*
 !config/sample.yml
 
 cache
+.tmp
 
 public/*
 !public/favicon.ico
