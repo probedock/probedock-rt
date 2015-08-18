@@ -1,8 +1,25 @@
+@import 'nib'
+@require 'variables'
+
 html
   height 100%
 
   body
+    background-color xenon-bg-color
     height 100%
 
     .ui
       height 100%
+
+.help-icon
+  position absolute
+  font-size 2.5em
+  cursor pointer
+  right 25px
+  top 15px
+
+.box
+  box-shadow: 3px 3px 2px lighten(probedock-gray, 25%);
+  background-color xenon-panel-bg-color
+
+@require './modules/*'

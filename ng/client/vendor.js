@@ -1,5 +1,6 @@
 // Libraries
 //= require javascripts/underscore
+//= require javascripts/underscore.string
 //= require javascripts/jquery
 //= require javascripts/moment
 //= require javascripts/socket-io-client

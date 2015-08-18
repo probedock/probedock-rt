@@ -1,7 +1,10 @@
 var
   _ = require('underscore'),
   logger = require('./logger')('websockets'),
+  util = require('util'),
   websockets = require('socket.io');
+
+var filters = {filters: []};
 
 module.exports = function(server) {
   var io = websockets(server, { serveClient: false });
@@ -10,17 +13,15 @@ module.exports = function(server) {
   io.on('connection', function(socket) {
     logger.debug('Client connected');
 
-    _.each([ 'help', 'i18n', 'print', 'scroll', 'view' ], function(event) {
-      socket.on('control:' + event, function(data) {
-        socket.broadcast.emit('control:' + event, data);
-        logger.debug('Control screen emitted "control:' + event + '": ' + JSON.stringify(data));
-      });
-    });
+    socket.on('filters:set', function(data) {
+   		util.log(util.inspect(data));
+   		filters.filters = data.filters;
+   	});
 
-    socket.on('control:state', function(data) {
-      socket.broadcast.emit('control:state', data);
-      logger.debug('Control screen changed state to "' + data.state + '": ' + JSON.stringify(data.params));
-    });
+   	socket.on('filters:reset', function() {
+   		filters.filters = [];
+   	});
+
   });
 
   return io;

@@ -1,11 +1,11 @@
 // Application
-//= require ./vendor
 //= require ./main
 //= require ./routes
 //= require_tree ./initializers
-//= require ./modules/config/index.js
-//= require ./modules/help/index.js
-//= require ./modules/i18n/index.js
-//= require ./modules/main/index.js
-//= require ./modules/sockets/index.js
+//= require ./modules/config/index
+//= require ./modules/help/index
+//= require ./modules/i18n/index
+//= require ./modules/main/index
+//= require ./modules/sockets/index
 //= require ./modules/switch-ui/index.js
+//= require ./modules/execution-filters/index

@@ -26,6 +26,7 @@ module.exports = function(grunt) {
         files: [
           // javascripts
           { nonull: true, src: 'bower_components/underscore/underscore.js', dest: 'vendor/assets/javascripts/underscore.js' },
+          { nonull: true, src: 'bower_components/underscore.string/dist/underscore.string.js', dest: 'vendor/assets/javascripts/underscore.string.js' },
           { nonull: true, src: 'bower_components/jquery/dist/jquery.js', dest: 'vendor/assets/javascripts/jquery.js' },
           { nonull: true, src: 'bower_components/moment/moment.js', dest: 'vendor/assets/javascripts/moment.js' },
           { nonull: true, src: 'bower_components/moment/locale/fr.js', dest: 'vendor/assets/javascripts/moment-fr.js' },

@@ -66,6 +66,10 @@ environment.registerHelper('listClientModules', require('./helpers/listClientMod
 
 environment.enable('autoprefixer');
 
+mincer.StylusEngine.configure(function(style) {
+  style.use(require('nib')());
+});
+
 // Mincer rebuilt assets on any dependency file change. But sometime result
 // depends on external variables: enviroment type, helper values and so one.
 // In this case, you should change enviroment "version" - place there any

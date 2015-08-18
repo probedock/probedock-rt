@@ -1,46 +1,19 @@
 .main
   padding .5em
+  height 100%
 
-  .help-open
-    position absolute
-    font-size 2.5em
-    cursor pointer
-    right 25px
-    top 15px
-
+  .help-icon
     i
       color #2F96B4
 
-  .header
+  .main-grid
+    flex-direction row
     display flex
+    height 100%
 
-    div
-      align-items center
-      display flex
+    .main-grid-left
+      flex 3
 
-      p
-        text-transform uppercase
-        margin-bottom 0
-        padding-left .5em
-        font-size 3em
+    .main-grid-right
+      flex 1
 
-        span
-          font-weight bold
-          color #E9454C
-
-    img
-      animation flickerAnimation 5s infinite
-      //position absolute
-      //height 95%
-      width 100px
-      opacity 1
-      //left 0
-      //top 0
-
-    @keyframes flickerAnimation
-      0%
-        opacity 1
-      50%
-        opacity 0.5
-      100%
-        opacity 1
