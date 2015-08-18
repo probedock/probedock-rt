@@ -2,8 +2,8 @@ angular.module('probedock-rt.routes', ['ui.router'])
 
   .config(function($stateProvider, $urlRouterProvider) {
     $stateProvider
-      .state('home', {
-        url: '/',
+      .state('main', {
+        url: '/main',
         controller: 'MainCtrl',
         templateUrl: '/modules/main/template.html'
       })
@@ -16,7 +16,7 @@ angular.module('probedock-rt.routes', ['ui.router'])
     ;
 
     $urlRouterProvider.otherwise(function($injector) {
-      $injector.get('$state').go('home');
+      $injector.get('$state').go('help');
     });
   })
 ;

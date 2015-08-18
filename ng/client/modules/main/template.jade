@@ -1,2 +1,9 @@
-.container.main
-  img(ng-src=assetPath('images/probedock-rt-colored.svg'))
+.main
+  switch-ui.help-open(title='Open the help' ng-click='switchUiCtrl.switch("help")')
+    i.glyphicon.glyphicon-question-sign
+
+  .header
+    div
+      img(ng-src=assetPath('images/probedock-rt-colored.svg'))
+    div
+      p <span>P</span>robe <span>D</span>ock <span>R</span>eal <span>T</span>ime

@@ -3,5 +3,6 @@
  *= require stylesheets/bootstrap
  *
  * Application Styles
+ *= require ./main
  *= require_tree ./modules
  */

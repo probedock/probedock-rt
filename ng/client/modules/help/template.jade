@@ -1,0 +1,56 @@
+.help
+  switch-ui.help-close(title='Close the help' ng-click='switchUiCtrl.switch("main")')
+    i.glyphicon.glyphicon-remove-sign
+
+  .header
+    div
+      img(ng-src=assetPath('images/probedock-rt-colored.svg'))
+    div
+      p <span>P</span>robe <span>D</span>ock <span>R</span>eal <span>T</span>ime
+
+  .help-container
+    .help-outer-content
+      h1 Welcome to Probe Dock RT
+      h4 Lightweight Probe Dock. It will help you in your daily work. Run tests, filter tests, get real time results in this interface.
+      h4 The following instructions will remain on the screen until you receive your first test results.
+      h3 Main user interface
+      hr
+
+    .help-outer-content.help-spacer
+      .help-inner-content
+        h3 Interface description
+        hr
+        section
+          h4 1. Summary
+          p The summary consolidates all the results received by Probe Dock RT. You will see the following columns:
+          ul
+            li
+              strong Version
+              | : Version of the project;
+            li
+              strong Project
+              | : The project API ID on Probe Dock if available. If not&nbsp;
+              code Any
+              | &nbsp;is used in place;
+            li
+              strong Category
+              | : The category refers to the type of tests;
+            li
+              strong Passed, Failed and Inactive
+              | : The status of the test results. In the case of&nbsp;
+              code Inactive
+              | &nbsp; the test can be&nbsp;
+              code Passed
+              | &nbsp;or&nbsp;
+              code Failed
+              | ;
+            li
+              strong All
+              | : The total of the test results for the category of test, in a project for the version;
+            li
+              strong Duration
+              | : The total duration of all the test results in the row.
+              p The table is updated each time a result is received. Therefore, the table reflects a state that is always a reflect of your activity.
+        hr
+
+  .footer

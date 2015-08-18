@@ -12,5 +12,8 @@ angular.module('probedock-rt', [
   // base application modules
   'probedock-rt.routes',
 
-  'probedock-rt.main'
+  'probedock-rt.main',
+  'probedock-rt.help',
+
+  'probedock-rt.switch-ui'
 ]);

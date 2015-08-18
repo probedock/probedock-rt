@@ -1,0 +1,4 @@
+{
+  "ext": "js,yml",
+  "watch": [ "config", "mincer", "server" ]
+}

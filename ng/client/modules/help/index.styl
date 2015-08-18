@@ -1,7 +1,35 @@
-.main
+.help
+  justify-content flex-start
+  flex-direction column
+  align-content stretch
+  align-items stretch
   padding .5em
+  display flex
+  height 100%
+  width 100%
 
-  .help-open
+  .help-container
+    justify-content flex-start
+    align-content stretch
+    align-items stretch
+    flex-direction row
+    display flex
+    flex 1
+
+    .help-outer-content
+      flex-direction column
+      margin-bottom 10px
+      overflow auto
+      padding 10px
+
+      .help-inner-content
+        padding-right 10px
+        height 0
+
+    .help-spacer
+      margin-top 20px
+
+  .help-close
     position absolute
     font-size 2.5em
     cursor pointer
@@ -9,7 +37,7 @@
     top 15px
 
     i
-      color #2F96B4
+      color #BD362F
 
   .header
     display flex

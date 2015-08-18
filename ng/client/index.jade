@@ -4,7 +4,7 @@ html(ng-app='probedock-rt', ng-strict-di=true, lang='en')
     meta(charset='utf-8')
     base(href='/')
 
-    title {{ 'application.title' | translate }}
+    title Probe Dock RT
 
     != css('app')
     != js('app')
@@ -12,4 +12,5 @@ html(ng-app='probedock-rt', ng-strict-di=true, lang='en')
     link(rel='shortcut icon', type='image/x-icon', href='/favicon.ico')
   body
     .debugGrid
-    div.main(ui-view)
+
+    .ui(ui-view)

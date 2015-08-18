@@ -6,23 +6,30 @@ var
 
 var files = [];
 
-function assetFilter(file) {
-  return file.match(/\.(?:js)$/);
-}
-
+// Compile the vendor assets and the configuration EJS asset
 var manifest = new mincer.Manifest(environment, path.join(config.root, '.tmp', 'test', 'assets'));
 var compiledAssets = manifest.compile([
   path.join(config.root, 'client', 'vendor.js'),
   path.join(config.root, 'client', 'modules', 'config', 'index.js.ejs')
 ]);
 
+// Prepare the vendor assets and the angular mock assets
 files.push(path.join(config.root, '.tmp', 'test', 'assets', compiledAssets.assets['vendor.js']));
 files.push('bower_components/angular-mocks/angular-mocks.js');
 
+// Prepare the app assets in the same order as it is declared in app.js
 files.push(path.join(config.root, 'client', 'main.js'));
 files.push(path.join(config.root, 'client', 'routes.js'));
+files.push(path.join(config.root, 'client', 'initializers') + '/**/*.js');
+
+// Special case for the configuration as it requires a pre-compilation
 files.push(path.join(config.root, '.tmp', 'test', 'assets', compiledAssets.assets['modules/config/index.js']));
+
+// Add the modules
 files.push(path.join(config.root, 'client', 'modules') + '/**/*.js');
+
+// And finally, add the specs
+files.push('test/unit/helper.spec.js');
 files.push('client/modules/**/*.spec.js');
 
 module.exports = function(config) {
