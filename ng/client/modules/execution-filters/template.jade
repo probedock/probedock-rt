@@ -7,12 +7,11 @@
           button.btn.filter-add(title='Click to add an execution filter' ng-click='execFiltersCtrl.addFilter(filter)')
             i.glyphicon.glyphicon-plus
         .input-group-addon
-          button.btn.filter-clearall(title='Click to clear all the current execution filters' ng-click='execFiltersCtrl.clearFilters()')
+          button.btn.filter-clear-all(title='Click to clear all the current execution filters' ng-click='execFiltersCtrl.clearFilters()')
             i.glyphicon.glyphicon-trash
     .filter-elements.filter-elements-hide
       .filter-element(ng-repeat='filter in execFiltersCtrl.filters()' data-filter='{{ filter.text }}')
-        span.filter-element-text
         i.glyphicon(class='glyphicon-{{ filter.ui.ico }}' title='{{ filter.ui.title }}')
-        | {{ filter.textSummary }}
+        span.filter-element-text {{ filter.textSummary }}
         button.filter-element-close(ng-click='execFiltersCtrl.clearFilter(filter)')
           i.glyphicon.glyphicon-remove-circle

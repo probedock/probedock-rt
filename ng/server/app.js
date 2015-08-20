@@ -15,7 +15,7 @@ var
 
 //app.set('config', config);
 
-//logger.info('Starting in ' + config.env + ' environment...');
+//logger.info('Starting in ' + process.env.NODE_ENV + ' environment...');
 //logger.debug('Configuration: ' + JSON.stringify(config.values()));
 
 require('./express')(app);

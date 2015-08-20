@@ -8,14 +8,14 @@ module.exports = function(app) {
   var config = require('../config');
 
   // in development, live-compile assets with the asset pipeline
-  if (config.env == 'development') {
+  if (process.env.NODE_ENV == 'development') {
     var mincer = require('mincer'),
         mincerEnvironment = require(path.join(config.root, 'mincer', 'environment'));
 
     app.use('/assets', mincer.createServer(mincerEnvironment));
 
     var templateHelpers = require(path.join(config.root, 'mincer', 'helpers', 'templates'));
-    _.extend(app.locals, templateHelpers(config.env));
+    _.extend(app.locals, templateHelpers());
 
     logger.debug('Assets will be compiled live through mincer (configuration in mincer/environment.js)');
   }

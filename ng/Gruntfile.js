@@ -141,13 +141,21 @@ module.exports = function(grunt) {
       prod: {
         NODE_ENV: 'production'
       },
-      test: {
+      dev: {
+        NODE_ENV: 'development',
         options: {
           add: {
             PROBEDOCK_TEST_REPORT_UID: require('node-uuid').v4()
           }
-        },
-        NODE_ENV: 'test'
+        }
+      },
+      test: {
+        NODE_ENV: 'test',
+        options: {
+          add: {
+            PROBEDOCK_TEST_REPORT_UID: require('node-uuid').v4()
+          }
+        }
       }
     }
   });
@@ -169,7 +177,8 @@ module.exports = function(grunt) {
   grunt.registerTask('deploy', [ 'precompile', 'run:deploy' ]);
   grunt.registerTask('dev', [ 'clean:cache', 'run:develop' ]);
   grunt.registerTask('unit', [ 'clean:test', 'karma:unit' ]);
-  grunt.registerTask('e2e', [ 'env:test', 'probedockSetup:e2e', 'protractor:e2e', 'probedockPublish:e2e' ]);
+  grunt.registerTask('e2e', [ 'env:test', 'precompile', 'probedockSetup:e2e', 'protractor:e2e', 'probedockPublish:e2e' ]);
+  grunt.registerTask('e2e-dev', [ 'env:dev', 'probedockSetup:e2e', 'protractor:e2e', 'probedockPublish:e2e' ]);
   grunt.registerTask('test', [ 'env:test', 'unit', 'e2e' ]);
   grunt.registerTask('precompile-test', [ 'env:test', 'clean:public', 'clean:cache', 'jade:precompile', 'precompileAssets', 'prettify:precompile' ]);
   grunt.registerTask('precompile', [ 'env:prod', 'clean:public', 'clean:cache', 'jade:precompile', 'precompileAssets' ]);

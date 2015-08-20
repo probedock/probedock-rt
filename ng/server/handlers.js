@@ -1,6 +1,4 @@
 module.exports = function(app) {
-  var config = require('../config');
-
   // catch 404 and forward to error handler
   app.use(function(req, res, next) {
     var err = new Error('Not Found');
@@ -12,7 +10,7 @@ module.exports = function(app) {
 
   // development error handler
   // will print stacktrace
-  if (config.env === 'development') {
+  if (process.env.NODE_ENV === 'development') {
     app.use(function(err, req, res, next) {
       res.status(err.status || 500);
       res.render('error', {

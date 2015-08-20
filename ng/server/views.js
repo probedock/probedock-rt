@@ -37,11 +37,10 @@ router.route('/modules/*')
 
 router.route('/*')
 	.get(function(req, res, next) {
-    if (config.env == 'development') {
+    if (process.env.NODE_ENV == 'development') {
 		  res.render('index');
     }
     else {
-      console.log('Serve index from public');
       res.send(fs.readFileSync(path.join(config.root, 'public', 'index.html'), { encoding: 'utf-8' }));
     }
 	});
