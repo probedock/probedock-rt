@@ -2,7 +2,7 @@ angular.module('probedock-rt.config', [])
 
   .constant('env', <%- JSON.stringify(config().env) %>)
 
-  .constant('version', <%- JSON.stringify(config().app.version) %>)
+  .constant('version', <%- JSON.stringify(config().version) %>)
 
   .provider('config', function() {
 

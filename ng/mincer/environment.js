@@ -24,7 +24,7 @@ var environment = module.exports = new mincer.Environment(config.root);
 // Configure environment load paths (where to find assets).
 
 // Assets in the "clients" directory can be referenced with relative paths starting from "clients",
-// e.g. if the asset file is at "clients/modules/home/foo.png", use "modules/home/foo.png" as the path.
+// e.g. if the asset file is at "client/modules/home/foo.png", use "modules/home/foo.png" as the path.
 environment.appendPath(path.join(config.root, 'client'));
 
 // Vendored assets in "vendor/fonts", "vendor/images", etc., can be referenced with relative paths from those directories,
@@ -92,8 +92,7 @@ environment.registerPostProcessor("text/css", "asset-paths", require('./processo
 mincer.MacroProcessor.configure([ '.js', '.css' ]);
 
 // Prepare production-ready environment
-if (process.env.NODE_ENV === 'production') {
-
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test') {
   // Enable JS and CSS compression
   environment.jsCompressor  = 'uglify';
   // (!) use csswring, because csso does not supports sourcemaps

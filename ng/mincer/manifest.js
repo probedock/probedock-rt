@@ -12,7 +12,7 @@ var manifest = new mincer.Manifest(environment, path.join(root, 'public', 'asset
 // Define the list of assets to compile.
 // For javascripts and stylesheets, only the main asset bundles are included.
 // Bundles then require the rest of the javascripts and stylesheets in the correct order.
-var assetsToCompile = [ '*/app.js', '*/app.css' ];
+var assetsToCompile = [ 'app.js', 'vendor.js', 'app.css' ];
 
 // For other files such as images and fonts, compile any file found with the following extensions.
 _.each([

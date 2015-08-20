@@ -76,6 +76,24 @@ module.exports = function(config) {
     // - IE (only Windows)
     browsers: ['PhantomJS'],
 
+    reporters: ['probedock'],
+
+    // customize the configuration
+    probedock: {
+      config: {
+        project: {
+          category: 'Karma'
+        }
+      }
+    },
+
+    plugins: [
+      'karma-jasmine',
+      'karma-phantomjs-launcher',
+      'karma-ng-html2js-preprocessor',
+      'probedock-karma'
+    ],
+
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit

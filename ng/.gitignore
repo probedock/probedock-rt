@@ -31,6 +31,8 @@ node_modules
 
 .idea
 
+.env
+
 config/*
 !config/sample.yml
 

@@ -1,9 +1,5 @@
 module.exports = function(grunt) {
-
-  var environment = process.env.NODE_ENV || 'development';
-
   grunt.initConfig({
-
     pkg: grunt.file.readJSON('package.json'),
 
     bump: {
@@ -65,13 +61,11 @@ module.exports = function(grunt) {
       }
     },
 
-    //ensureProduction: {},
-
     jade: {
       precompile: {
         options: {
           data: function() {
-            return require('./mincer/helpers/templates')(environment);
+            return require('./mincer/helpers/templates')();
           },
           pretty: true
         },
@@ -124,6 +118,37 @@ module.exports = function(grunt) {
       develop: {
         exec: 'nodemon server/app.js'
       }
+    },
+
+    probedockSetup: {
+      e2e: {}
+    },
+
+    probedockPublish: {
+      e2e: {}
+    },
+
+    protractor: {
+      options: {
+        configFile: 'protractor.conf.js',
+        keepAlive: true,
+        webdriverManagerUpdate: true
+      },
+      e2e: {}
+    },
+
+    env: {
+      prod: {
+        NODE_ENV: 'production'
+      },
+      test: {
+        options: {
+          add: {
+            PROBEDOCK_TEST_REPORT_UID: require('node-uuid').v4()
+          }
+        },
+        NODE_ENV: 'test'
+      }
     }
   });
 
@@ -136,11 +161,17 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-run');
   grunt.loadNpmTasks('grunt-prettify');
   grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('probedock-grunt');
+  grunt.loadNpmTasks('grunt-protractor-runner');
+  grunt.loadNpmTasks('grunt-env');
 
   grunt.registerTask('default', [ 'jshint' ]);
   grunt.registerTask('deploy', [ 'precompile', 'run:deploy' ]);
   grunt.registerTask('dev', [ 'clean:cache', 'run:develop' ]);
   grunt.registerTask('unit', [ 'clean:test', 'karma:unit' ]);
-  grunt.registerTask('precompile', [ 'clean:public', 'clean:cache', 'jade:precompile', 'precompileAssets', 'prettify:precompile' ]);
+  grunt.registerTask('e2e', [ 'env:test', 'probedockSetup:e2e', 'protractor:e2e', 'probedockPublish:e2e' ]);
+  grunt.registerTask('test', [ 'env:test', 'unit', 'e2e' ]);
+  grunt.registerTask('precompile-test', [ 'env:test', 'clean:public', 'clean:cache', 'jade:precompile', 'precompileAssets', 'prettify:precompile' ]);
+  grunt.registerTask('precompile', [ 'env:prod', 'clean:public', 'clean:cache', 'jade:precompile', 'precompileAssets' ]);
   grunt.registerTask('vendor', [ 'copy:assets', 'copy:assetsWithRelativeUrls' ]);
 };

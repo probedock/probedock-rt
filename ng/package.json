@@ -2,6 +2,8 @@
   "name": "probedock-rt",
   "description": "Real time test tracking tool.",
   "version": "0.2.0",
+  "license": "MIT",
+  "readme": "https://github.com/probedock/probedock-rt/blob/master/README.md",
   "author": {
     "name": "Laurent Prevost",
     "email": "laurent.prevost@probedock.io"
@@ -23,7 +25,6 @@
   "engines": {
     "node": ">=0.8.0"
   },
-  "bin": "./bin/probedock-rt",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node bin/probedock-rt"
@@ -40,8 +41,10 @@
     "grunt-contrib-jade": "^0.15.0",
     "grunt-contrib-jshint": "^0.11.1",
     "grunt-css-url-rewrite": "^0.3.5",
+    "grunt-env": "^0.4.4",
     "grunt-karma": "^0.12.0",
     "grunt-prettify": "^0.4.0",
+    "grunt-protractor-runner": "^2.1.0",
     "grunt-run": "^0.3.0",
     "jasmine": "^2.3.2",
     "jasmine-core": "^2.3.4",
@@ -53,7 +56,12 @@
     "mincer": "^1.2.4",
     "ng-annotate": "^0.15.4",
     "nib": "^1.1.0",
+    "node-uuid": "^1.4.3",
     "phantomjs": "^1.9.18",
+    "probedock-grunt": "^0.4.0",
+    "probedock-grunt-jasmine": "^0.2.2",
+    "probedock-karma": "^0.2.1",
+    "protractor": "^2.1.0",
     "stylus": "^0.51.1",
     "uglify-js": "^2.4.19"
   },

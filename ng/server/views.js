@@ -1,4 +1,8 @@
-var express = require('express'),
+var
+  express = require('express'),
+  fs = require('fs-extra'),
+  config = require('../config.js'),
+  path = require('path'),
   router = express.Router();
 
 module.exports = function (app) {
@@ -33,7 +37,13 @@ router.route('/modules/*')
 
 router.route('/*')
 	.get(function(req, res, next) {
-		res.render('index');
+    if (config.env == 'development') {
+		  res.render('index');
+    }
+    else {
+      console.log('Serve index from public');
+      res.send(fs.readFileSync(path.join(config.root, 'public', 'index.html'), { encoding: 'utf-8' }));
+    }
 	});
 
 

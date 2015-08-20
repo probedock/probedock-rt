@@ -4,7 +4,6 @@ var
   path = require('path');
 
 module.exports = function(environment) {
-
   function rewriteExtension(source, ext) {
     var sourceExt = path.extname(source);
     return sourceExt ? source : source + ext;
@@ -29,7 +28,7 @@ module.exports = function(environment) {
     return tagFunc(asset);
   }
 
-  var scriptsFunc = environment == 'development' ? developmentAssets : productionAssets;
+  var scriptsFunc = environment == (process.env.NODE_ENV || 'development') ? developmentAssets : productionAssets;
 
   return {
     js: function(logicalPath) {

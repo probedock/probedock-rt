@@ -22,7 +22,7 @@ module.exports = function(app) {
 
   // in production, use pre-compiled assets
   else {
-    app.use(express.static(config.path('public')));
+    app.use(express.static(path.join(config.root, 'public')));
 
     logger.debug('Assets have been precompiled (configuration in mincer/environment.js) and will be served statically from the "public" directory');
   }
