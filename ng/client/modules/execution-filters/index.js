@@ -1,55 +1,112 @@
+var icons = {
+  key: {
+    ico: 'qrcode',
+    title: 'Key filter'
+  },
+  fp: {
+    ico: 'hand-up',
+    title: 'Fingerprint filter',
+    reduce: function(str) {
+      return str.length > 9 ? str.substr(0, 3) + '...' + str.substr(str.length - 3) : str;
+    }
+  },
+  name: {
+    ico: 'stats',
+    title: 'Name filter',
+    reduce: function(str) {
+      return str.length > 10 ? str.substr(0, 9) + '...' : str;
+    }
+  },
+  tag: {
+    ico: 'tag',
+    title: 'Tag filter'
+  },
+  ticket: {
+    ico: 'list',
+    title: 'Ticket filter'
+  },
+  '*': {
+    ico: 'asterisk',
+    title: 'Generic filter'
+  }
+};
+
 angular.module('probedock-rt.execution-filters', [])
-  //.factory('SwitchUiService', function($state) {
-  //  var mode = 'help';
-  //
-  //  return {
-  //    switch: function(newMode) {
-  //      if (newMode != mode) {
-  //        mode = newMode;
-  //        $state.go(newMode);
-  //      }
-  //    }
-  //  }
-  //})
-  //
-  .controller('ExecutionFiltersController', function($scope, socket) {
-    var icons = {
-      key: {
-        ico: 'qrcode',
-        title: 'Key filter'
+  .factory('ExecutionFiltersService', function(socket) {
+    var filters = {};
+
+    function enrichKey(filter) {
+      filter.key = filter.type + ':' + filter.text;
+    }
+
+    function buildFilter(filterText) {
+      var createdFilter = {
+        text: s.trim(filterText),
+        type: '*'
+      };
+
+      _.each(icons, function(icon, iconKey) {
+        if (s.startsWith(filterText, iconKey + ':')) {
+          createdFilter.text = filterText.replace(iconKey + ':', '');
+          createdFilter.type = iconKey;
+        }
+      });
+
+      enrichKey(createdFilter);
+
+      return createdFilter;
+    }
+
+    return {
+      filters: function() {
+        return _.clone(filters);
       },
-      fp: {
-        ico: 'hand-up',
-        title: 'Fingerprint filter',
-        reduce: function(str) {
-          return str.length > 9 ? str.substr(0, 3) + '...' + str.substr(str.length - 3) : str;
+
+      addFilter: function(filterText) {
+        var transformedFilter = buildFilter(filterText);
+
+        if (_.isUndefined(filters[transformedFilter.key])) {
+          filters[transformedFilter.key] = transformedFilter;
+
+          if (_.size(filters.length) > 0) {
+            socket.emit('filters:set', { filters: filters });
+          }
+          else {
+            socket.emit('filters:reset');
+          }
+
+          return true;
+        }
+        else {
+          return false;
         }
       },
-      name: {
-        ico: 'stats',
-        title: 'Name filter',
-        reduce: function(str) {
-          return str.length > 10 ? str.substr(0, 9) + '...' : str;
+
+      removeFilter: function(filterKey) {
+        if (!_.isUndefined(filters[filterKey])) {
+          delete filters[filterKey];
         }
       },
-      tag: {
-        ico: 'tag',
-        title: 'Tag filter'
+
+      removeAll: function() {
+        filters = {};
+        socket.emit('filters:reset');
       },
-      ticket: {
-        ico: 'list',
-        title: 'Ticket filter'
+
+      hasFilters: function() {
+        return !_.isEmpty(filters);
       },
-      '*': {
-        ico: 'asterisk',
-        title: 'Generic filter'
+
+      hasFilterByText: function(filterText) {
+        var filter = buildFilter(filterText);
+        return !_.isUndefined(filters[filter.key]);
       }
-    };
+    }
+  })
 
-    $scope.filters = [];
-
+  .controller('ExecutionFiltersController', function($scope, ExecutionFiltersService) {
     this.filters = function() {
-      return _.reduce($scope.filters, function(memo, filter) {
+      var filters = _.reduce(ExecutionFiltersService.filters(), function(memo, filter) {
         var filterUi;
         if (icons[filter.type]) {
           filterUi = _.extend(filter, {ui: icons[filter.type]});
@@ -64,48 +121,47 @@ angular.module('probedock-rt.execution-filters', [])
 
         return memo;
       }, []);
+
+      return filters;
     };
 
     this.addFilter = function(filter) {
-      if (filter && filter.text != '') {
-        var transformedFilter = {
-          text: s.trim(filter.text),
-          type: '*'
-        };
-
-        _.each(icons, function(icon, iconKey) {
-          if (s.startsWith(filter.text, iconKey + ':')) {
-            transformedFilter.text = filter.text.replace(iconKey + ':', '');
-            transformedFilter.type = iconKey;
-          }
-        });
-
-        $scope.filters.push(transformedFilter);
-        $scope.filter = {text: ''};
-
-        if (!_.isUndefined($scope.filters) && $scope.filters.length > 0) {
-          socket.emit('filters:set', {filters: $scope.filters});
+      console.log(filter);
+      if (filter && !_.isUndefined(filter.text) && filter.text != '') {
+        var result = ExecutionFiltersService.addFilter(filter.text);
+        if (result) {
+          $scope.filter = { text: '' };
         }
-        else {
-          socket.emit('filters:reset');
-        }
-      }
-    };
-
-    this.addFilterFromKeyboard = function(event, filter) {
-      if (event.keyCode == 13) {
-        this.addFilter(filter);
       }
     };
 
     this.clearFilter = function(filter) {
-      console.log(filter);
+      ExecutionFiltersService.removeFilter(filter.key);
     };
 
     this.clearFilters = function() {
-      $scope.filters = [];
-      socket.emit('filters:reset');
-    }
+      ExecutionFiltersService.removeAll();
+
+      //$scope.filter.text = '';
+      //$scope.executionFiltersForm.$setPristine();
+      //$scope.executionFiltersForm.$setDirty();
+    };
+
+    this.filterClass = function(filter) {
+      return filter.type == '*' ? '' : 'execution-filters-element-' + filter.type;
+    };
+
+    this.isAddFilterDisabled = function() {
+      return !$scope.filter || _.isUndefined($scope.filter.text) || $scope.filter.text == '';
+    };
+
+    this.isClearDisabled = function() {
+      return !ExecutionFiltersService.hasFilters();
+    };
+
+    this.isValid = function(filter) {
+      return true;
+    };
   })
 
   .directive('executionFilters', function() {
@@ -116,5 +172,21 @@ angular.module('probedock-rt.execution-filters', [])
       templateUrl: 'modules/execution-filters/template.html',
       controller: 'ExecutionFiltersController',
       controllerAs: 'execFiltersCtrl'
+    };
+  })
+
+  .directive('executionFilterExists', function(ExecutionFiltersService) {
+    return {
+      require: 'ngModel',
+      link: function(scope, elm, attrs, ctrl) {
+        ctrl.$validators.executionFilterExists = function(modelValue, viewValue) {
+          if (ctrl.$isEmpty(modelValue)) {
+            return true;
+          }
+          else {
+            return !ExecutionFiltersService.hasFilterByText(modelValue);
+          }
+        }
+      }
     };
   });

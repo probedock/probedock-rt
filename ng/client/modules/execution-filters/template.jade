@@ -1,17 +1,18 @@
 .execution-filters.box
-  from.form-inline.filters-form.text-center
+  form.form-inline.execution-filters-form.text-center(name='executionFiltersForm' ng-submit='executionFiltersForm.$valid && execFiltersCtrl.addFilter(filter)' novalidate)
     .form-group
       .input-group
-        input.form-control.input-lg#filterField(type='text', placeholder='Execution filters' ng-model='filter.text' ng-keyup='execFiltersCtrl.addFilterFromKeyboard($event, filter)')
+        input.form-control.input-lg#filterField(type='text' name='executionFiltersInput' placeholder='Execution filters' ng-model='filter.text' execution-filter-exists required)
         .input-group-addon
-          button.btn.filter-add(title='Click to add an execution filter' ng-click='execFiltersCtrl.addFilter(filter)')
+          button.btn.execution-filters-add(type='submit' tooltip='Add an execution filter' tooltip-popup-delay='1000' ng-disabled='executionFiltersForm.$invalid')
             i.glyphicon.glyphicon-plus
         .input-group-addon
-          button.btn.filter-clear-all(title='Click to clear all the current execution filters' ng-click='execFiltersCtrl.clearFilters()')
+          button.btn.execution-filters-clear-all(tooltip='Clear all the execution filters' tooltip-popup-delay='1000' ng-click='execFiltersCtrl.clearFilters()' ng-disabled='execFiltersCtrl.isClearDisabled()')
             i.glyphicon.glyphicon-trash
-    .filter-elements.filter-elements-hide
-      .filter-element(ng-repeat='filter in execFiltersCtrl.filters()' data-filter='{{ filter.text }}')
-        i.glyphicon(class='glyphicon-{{ filter.ui.ico }}' title='{{ filter.ui.title }}')
-        span.filter-element-text {{ filter.textSummary }}
-        button.filter-element-close(ng-click='execFiltersCtrl.clearFilter(filter)')
-          i.glyphicon.glyphicon-remove-circle
+      span(ng-show="!executionFiltersForm.$pristine && executionFiltersForm.executionFiltersInput.$error.executionFilterExists") This filter has already been added !
+  .execution-filters-elements.execution-filters-elements-hide
+    .execution-filters-element(ng-class='execFiltersCtrl.filterClass(filter)' ng-repeat='filter in execFiltersCtrl.filters()' data-filter='{{ filter.text }}')
+      i.execution-filters-icon.glyphicon(class='glyphicon-{{ filter.ui.ico }}' tooltip='{{ filter.ui.title }}' tooltip-popup-delay='100')
+      span.execution-filters-element-text {{ filter.textSummary }}
+      button.execution-filters-element-close(ng-click='execFiltersCtrl.clearFilter(filter)' tooltip='Remove' tooltip-popup-delay='250')
+        i.glyphicon.glyphicon-remove-circle

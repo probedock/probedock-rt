@@ -1,3 +1,9 @@
+var _ = require('underscore');
+
+if (_.isUndefined(process.env.NODE_ENV)) {
+  process.env.NODE_ENV = 'development';
+}
+
 var
   express = require('express'),
   fs = require('fs'),
