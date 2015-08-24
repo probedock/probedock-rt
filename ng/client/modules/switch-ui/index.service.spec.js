@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: SwitchUiService', function () {
+describe('Service: SwitchUiService @probedock(contributor=laurent.prevost@probedock.io tag=switchUi', function () {
   var switchUiService,
       $stateMock;
 

@@ -35,5 +35,9 @@ exports.config = {
         }
       }
     }));
+
+    beforeEach(function() {
+      this.addMatchers(require('./test/e2e/matchers.js'));
+    });
   }
 };

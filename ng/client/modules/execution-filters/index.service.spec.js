@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: ExecutionFiltersService', function () {
+describe('Service: ExecutionFiltersService @probedock(contributor=laurent.prevost@probedock.io tag=executionFilters)', function () {
   var executionFiltersService,
     executionFiltersSocketServiceMock;
 

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: SwitchUiController', function () {
+describe('Controller: SwitchUiController @probedock(contributor=laurent.prevost@probedock.io tag=switchUi)', function () {
   var SwitchUiController;
   var SwitchUiServiceFactoryMock;
 

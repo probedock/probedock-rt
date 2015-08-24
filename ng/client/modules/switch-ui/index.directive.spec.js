@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: SwitchUi', function () {
+describe('Directive: SwitchUi @probedock(contributor=laurent.prevost@probedock.io tag=switchUi', function () {
   var $compile,
       $rootScope,
       switchUiControllerMock;

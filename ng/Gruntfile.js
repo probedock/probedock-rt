@@ -143,6 +143,8 @@ module.exports = function(grunt) {
       },
       dev: {
         NODE_ENV: 'development',
+        PROBEDOCK_RT_PORT: 1338,
+        SOCKETIO_TEST: true,
         options: {
           add: {
             PROBEDOCK_TEST_REPORT_UID: require('node-uuid').v4()
@@ -151,6 +153,7 @@ module.exports = function(grunt) {
       },
       test: {
         NODE_ENV: 'test',
+        SOCKETIO_TEST: true,
         options: {
           add: {
             PROBEDOCK_TEST_REPORT_UID: require('node-uuid').v4()
@@ -176,10 +179,10 @@ module.exports = function(grunt) {
   grunt.registerTask('default', [ 'jshint' ]);
   grunt.registerTask('deploy', [ 'precompile', 'run:deploy' ]);
   grunt.registerTask('dev', [ 'clean:cache', 'run:develop' ]);
-  grunt.registerTask('unit', [ 'clean:test', 'karma:unit' ]);
-  grunt.registerTask('e2e', [ 'env:test', 'precompile', 'probedockSetup:e2e', 'protractor:e2e', 'probedockPublish:e2e' ]);
-  grunt.registerTask('e2e-dev', [ 'env:dev', 'probedockSetup:e2e', 'protractor:e2e', 'probedockPublish:e2e' ]);
-  grunt.registerTask('test', [ 'env:test', 'unit', 'e2e' ]);
+  grunt.registerTask('unit', [ 'env:test', 'clean:test', 'karma:unit' ]);
+  grunt.registerTask('e2e', [ 'env:test', 'precompile-test', 'probedockSetup:e2e', 'protractor:e2e', 'probedockPublish:e2e' ]);
+  grunt.registerTask('e2e-dev', [ 'clean:cache', 'env:dev', 'probedockSetup:e2e', 'protractor:e2e', 'probedockPublish:e2e' ]);
+  grunt.registerTask('test', [ 'clean:cache', 'unit', 'e2e' ]);
   grunt.registerTask('precompile-test', [ 'env:test', 'clean:public', 'clean:cache', 'jade:precompile', 'precompileAssets', 'prettify:precompile' ]);
   grunt.registerTask('precompile', [ 'env:prod', 'clean:public', 'clean:cache', 'jade:precompile', 'precompileAssets' ]);
   grunt.registerTask('vendor', [ 'copy:assets', 'copy:assetsWithRelativeUrls' ]);

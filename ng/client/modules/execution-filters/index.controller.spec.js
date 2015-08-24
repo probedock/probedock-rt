@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: ExecutionFiltersController', function () {
+describe('Controller: ExecutionFiltersController @probedock(contributor=laurent.prevost@probedock.io tag=executionFilters)', function () {
   var executionFiltersController,
       executionFiltersServiceMock,
       scopeMock;

@@ -63,6 +63,7 @@
     "probedock-grunt-jasmine": "^0.2.2",
     "probedock-karma": "^0.2.1",
     "protractor": "^2.1.0",
+    "socket.io-client": "^1.3.6",
     "stylus": "^0.51.1",
     "uglify-js": "^2.4.19"
   },

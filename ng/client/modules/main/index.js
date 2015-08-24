@@ -3,6 +3,6 @@ angular.module('probedock-rt.main', [ 'probedock-rt.sockets' ])
     //var ioSocket = socket();
 
     socket.on('connect', function() {
-      //console.log('connected');
+      console.log('connected');
     })
   });

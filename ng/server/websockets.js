@@ -16,10 +16,19 @@ module.exports = function(server) {
     socket.on('filters:set', function(data) {
    		util.log(util.inspect(data));
    		filters.filters = data.filters;
+
+      if (process.env.SOCKETIO_TEST) {
+        io.emit('test:filters:set', data);
+      }
    	});
 
    	socket.on('filters:reset', function() {
+      console.log('filters:reset');
    		filters.filters = [];
+
+      if (process.env.SOCKETIO_TEST) {
+        io.emit('test:filters:reset');
+      }
    	});
 
   });
