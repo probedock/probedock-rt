@@ -1,4 +1,6 @@
-var _ = require('underscore');
+var
+  _ = require('underscore'),
+  ioc = require('./ioc');
 
 if (_.isUndefined(process.env.NODE_ENV)) {
   process.env.NODE_ENV = 'development';
@@ -34,7 +36,7 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
-app.io = require('./websockets')(server);
+ioc.create('websockets')(server);
 
 p.resolve().then(startServer).then(onListening, onError);
 

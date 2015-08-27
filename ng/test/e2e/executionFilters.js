@@ -153,8 +153,6 @@ describe('Execution filters: @probedock(contributor=laurent.prevost@probedock.io
   });
 
   it('configuring filters should send them through socket.io', function(done) {
-    console.log('http://' + config.host + ':' + config.port);
-
     var socket = socketIO('http://' + config.host + ':' + config.port);
 
     socket.once('test:filters:set', function (data) {

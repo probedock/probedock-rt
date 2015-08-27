@@ -96,6 +96,25 @@ module.exports = function(grunt) {
       }
     },
 
+    jasmine_nodejs: {
+      options: {
+        useHelpers: true,
+        reporters: {
+          console: {
+            cleanStack: 0
+          }
+        }
+      },
+      unit: {
+        specs: [
+          "test/server/unit/**"
+        ],
+        helpers: [
+          "test/server/unit/**"
+        ]
+      }
+    },
+
     karma: {
       unit: {
         configFile: 'karma.conf.js',
@@ -144,7 +163,7 @@ module.exports = function(grunt) {
       dev: {
         NODE_ENV: 'development',
         PROBEDOCK_RT_PORT: 1338,
-        SOCKETIO_TEST: true,
+        SOCKETIO_TEST: 'test',
         options: {
           add: {
             PROBEDOCK_TEST_REPORT_UID: require('node-uuid').v4()
@@ -153,7 +172,7 @@ module.exports = function(grunt) {
       },
       test: {
         NODE_ENV: 'test',
-        SOCKETIO_TEST: true,
+        SOCKETIO_TEST: 'test',
         options: {
           add: {
             PROBEDOCK_TEST_REPORT_UID: require('node-uuid').v4()
@@ -175,10 +194,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('probedock-grunt');
   grunt.loadNpmTasks('grunt-protractor-runner');
   grunt.loadNpmTasks('grunt-env');
+  grunt.loadNpmTasks('grunt-jasmine-nodejs');
 
   grunt.registerTask('default', [ 'jshint' ]);
   grunt.registerTask('deploy', [ 'precompile', 'run:deploy' ]);
   grunt.registerTask('dev', [ 'clean:cache', 'run:develop' ]);
+  grunt.registerTask('unit-srv', [ 'env:test', 'probedockSetup:e2e', 'jasmine_nodejs:unit', 'probedockPublish:e2e' ]);
   grunt.registerTask('unit', [ 'env:test', 'clean:test', 'karma:unit' ]);
   grunt.registerTask('e2e', [ 'env:test', 'precompile-test', 'probedockSetup:e2e', 'protractor:e2e', 'probedockPublish:e2e' ]);
   grunt.registerTask('e2e-dev', [ 'clean:cache', 'env:dev', 'probedockSetup:e2e', 'protractor:e2e', 'probedockPublish:e2e' ]);

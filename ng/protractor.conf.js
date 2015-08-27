@@ -11,7 +11,10 @@ exports.config = {
   ],
 
   capabilities: {
-    'browserName': 'chrome'
+    browserName: 'chrome'
+    //'browserName': 'phantomjs',
+    //'phantomjs.binary.path': require('phantomjs2').path,
+    //'phantomjs.ghostdriver.cli.args': ['--loglevel=DEBUG']
   },
 
   baseUrl: 'http://' + config.host + ':' + config.port,
