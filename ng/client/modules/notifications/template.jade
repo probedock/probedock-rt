@@ -1,0 +1,9 @@
+//  .notifications-inner-container
+//    button.notifications-ack(type='button' title='Click to clear all the notifications')
+//    i.icon-legal
+
+.box
+  .notifications-container
+    h3(ng-show='notificationsCtrl.notifications == 0') Notifications
+      .no-notification No notification received
+    .notifications(ng-show='notificationsCtrl.notifications > 0')

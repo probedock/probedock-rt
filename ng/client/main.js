@@ -16,5 +16,6 @@ angular.module('probedock-rt', [
   'probedock-rt.help',
 
   'probedock-rt.switch-ui',
-  'probedock-rt.execution-filters'
+  'probedock-rt.execution-filters',
+  'probedock-rt.notifications'
 ]);

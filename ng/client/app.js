@@ -7,5 +7,6 @@
 //= require ./modules/i18n/index
 //= require ./modules/main/index
 //= require ./modules/sockets/index
-//= require ./modules/switch-ui/index.js
+//= require ./modules/switch-ui/index
 //= require ./modules/execution-filters/index
+//= require ./modules/notifications/index

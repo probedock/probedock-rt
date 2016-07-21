@@ -16,6 +16,7 @@ var compiledAssets = manifest.compile([
 // Prepare the vendor assets and the angular mock assets
 files.push(path.join(config.root, '.tmp', 'test', 'assets', compiledAssets.assets['vendor.js']));
 files.push('bower_components/angular-mocks/angular-mocks.js');
+//files.push('bower_components/angular-socket-io/mock/socket-io.js');
 
 // Prepare the app assets in the same order as it is declared in app.js
 files.push(path.join(config.root, 'client', 'main.js'));
